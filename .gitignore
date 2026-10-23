@@ -1,0 +1,9 @@
+.env
+.venv/
+__pycache__/
+.DS_Store
+*.pcm
+*.m4a
+*.wav
+kirana-confirmation.mp3 
+order-confirmation.mp3
