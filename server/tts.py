@@ -5,10 +5,9 @@ from gnani.tts import GnaniTTSClient, AudioConfig
 load_dotenv()
 
 
-def main():
+def synthesize_speech(text: str) -> bytes:
+    """Convert the supplied text into Hindi speech and return MP3 bytes."""
     client = GnaniTTSClient()
-
-    text = "Bhaiya, aapka order hai ek kilo chawal, do kilo aloo, aur paanch sau gram lehsun adrak. Sahi hai na?"
 
     audio = client.synthesize(
         text,
@@ -23,6 +22,16 @@ def main():
         ),
     )
 
+    return audio
+
+
+def main():
+    text = (
+        "Bhaiya, aapka order hai ek kilo chawal, "
+        "do kilo aloo, aur paanch sau gram lehsun adrak. Sahi hai na?"
+    )
+
+    audio = synthesize_speech(text)
     output_path = "order-confirmation.mp3"
 
     with open(output_path, "wb") as audio_file:

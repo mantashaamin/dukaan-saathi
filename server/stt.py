@@ -9,7 +9,7 @@ load_dotenv()
 
 
 async def main():
-    audio_path = "kirana-test-silence.pcm"
+    audio_path = "kirana-test.pcm"
     if not os.getenv("GNANI_API_KEY"):
         raise RuntimeError(
             "GNANI_API_KEY is missing. Check your root .env file."

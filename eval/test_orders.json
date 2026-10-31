@@ -505,16 +505,11 @@
     "transcript": "Teen kilo aloo aur teen kilo aloo.",
     "expected": {
       "items": [
-        {
-          "name": "aloo",
-          "quantity": 3,
-          "unit": "kg"
-        },
-        {
-          "name": "aloo",
-          "quantity": 3,
-          "unit": "kg"
-        }
+  {
+    "name": "aloo",
+    "quantity": 6,
+    "unit": "kg"
+  }
       ],
       "needs_clarification": false
     }
