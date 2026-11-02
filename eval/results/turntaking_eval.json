@@ -1,0 +1,298 @@
+{
+  "total_cases": 30,
+  "naive_accuracy_percent": 36.67,
+  "smart_accuracy_percent": 100.0,
+  "naive_false_interruption_rate_percent": 100.0,
+  "smart_false_interruption_rate_percent": 0.0,
+  "naive_missed_correction_rate_percent": 0.0,
+  "smart_missed_correction_rate_percent": 0.0,
+  "category_accuracy": {
+    "backchannel": {
+      "passed": 10,
+      "total": 10,
+      "accuracy_percent": 100.0
+    },
+    "correction": {
+      "passed": 10,
+      "total": 10,
+      "accuracy_percent": 100.0
+    },
+    "ambiguous": {
+      "passed": 10,
+      "total": 10,
+      "accuracy_percent": 100.0
+    }
+  },
+  "cases": [
+    {
+      "transcript": "haan",
+      "duration_seconds": 0.4,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "haan haan",
+      "duration_seconds": 0.7,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "हाँ",
+      "duration_seconds": 0.4,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "हाँहाँ",
+      "duration_seconds": 0.6,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "हम्म",
+      "duration_seconds": 0.5,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "अच्छा",
+      "duration_seconds": 0.5,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "जी",
+      "duration_seconds": 0.4,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ठीक है",
+      "duration_seconds": 0.8,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ओके",
+      "duration_seconds": 0.5,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "hmm",
+      "duration_seconds": 0.5,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ruko",
+      "duration_seconds": 0.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "nahi",
+      "duration_seconds": 0.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ek minute",
+      "duration_seconds": 0.7,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "wait",
+      "duration_seconds": 0.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "galat hai",
+      "duration_seconds": 0.7,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "aloo nahi, pyaz de do",
+      "duration_seconds": 1.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "namak ki jagah atta",
+      "duration_seconds": 1.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ek kilo nahi, do kilo",
+      "duration_seconds": 1.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "रुको, नमक नहीं",
+      "duration_seconds": 1.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "नहीं, प्याज दे दो",
+      "duration_seconds": 1.5,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "",
+      "duration_seconds": 0.0,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "ask_again",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "umm",
+      "duration_seconds": 0.4,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "uh",
+      "duration_seconds": 0.5,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "शायद",
+      "duration_seconds": 0.5,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "वो",
+      "duration_seconds": 0.5,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "कुछ",
+      "duration_seconds": 0.5,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "hmm maybe",
+      "duration_seconds": 0.5,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "kya",
+      "duration_seconds": 0.4,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "मतलब",
+      "duration_seconds": 0.5,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "pata nahi",
+      "duration_seconds": 0.7,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    }
+  ]
+}
