@@ -7,9 +7,7 @@
     <title>Dukaan Saathi | Voice Order Assistant</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -25,15 +23,8 @@
             text-align: center;
         }
 
-        header h1 {
-            margin: 0 0 8px;
-            font-size: 30px;
-        }
-
-        header p {
-            margin: 0;
-            color: #d8eadf;
-        }
+        header h1 { margin: 0 0 8px; font-size: 30px; }
+        header p { margin: 0; color: #d8eadf; }
 
         main {
             max-width: 760px;
@@ -50,10 +41,7 @@
             box-shadow: 0 5px 18px rgba(20, 60, 40, 0.05);
         }
 
-        h2 {
-            font-size: 20px;
-            margin: 0 0 16px;
-        }
+        h2 { font-size: 20px; margin: 0 0 16px; }
 
         label {
             display: block;
@@ -93,20 +81,15 @@
             width: 100%;
         }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        #status {
+        #status, #correctionStatus {
             margin-top: 14px;
             color: #52665a;
             font-size: 14px;
         }
 
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
 
         #orderItems {
             list-style: none;
@@ -122,9 +105,7 @@
             border-bottom: 1px solid #edf1ed;
         }
 
-        #orderItems li:last-child {
-            border-bottom: 0;
-        }
+        #orderItems li:last-child { border-bottom: 0; }
 
         .quantity {
             color: #176b46;
@@ -143,14 +124,8 @@
             margin-bottom: 14px;
         }
 
-        #confirmationText {
-            line-height: 1.7;
-            margin-bottom: 16px;
-        }
-
-        audio {
-            width: 100%;
-        }
+        #confirmationText { line-height: 1.7; margin-bottom: 16px; }
+        audio { width: 100%; }
 
         #error {
             color: #b42318;
@@ -168,338 +143,416 @@
 </head>
 
 <body>
-    <header>
-        <h1>🛍️ Dukaan Saathi</h1>
-        <p>Your Hinglish voice assistant for kirana orders</p>
-    </header>
+<header>
+    <h1>🛍️ Dukaan Saathi</h1>
+    <p>Your Hinglish voice assistant for kirana orders</p>
+</header>
 
-    <main>
-        <section class="card">
-            <h2>Place an Order</h2>
+<main>
+    <section class="card">
+        <h2>Place an Order</h2>
 
-            <label for="transcript">Enter what the customer said</label>
+        <label for="transcript">Enter what the customer said</label>
 
-            <textarea
-                id="transcript"
-                placeholder="Example: Bhaiya ek kilo chawal aur do kilo aloo dena"
-            >Bhaiya ek kilo chawal aur do kilo aloo dena</textarea>
+        <textarea id="transcript"
+            placeholder="Example: Bhaiya ek kilo chawal aur do kilo aloo dena">Bhaiya ek kilo chawal aur do kilo aloo dena</textarea>
 
-            <button id="submitButton" type="button">
-                Parse Order & Generate Voice
-            </button>
+        <button id="submitButton" type="button">
+            Parse Order & Generate Voice
+        </button>
 
-            <p id="status" role="status">Ready to process an order.</p>
-            <p id="error" role="alert"></p>
-        </section>
+        <p id="status" role="status">Ready to process an order.</p>
+        <p id="error" role="alert"></p>
+    </section>
 
-        <section id="orderCard" class="card hidden">
-            <span class="badge" id="orderBadge">Order Parsed</span>
-            <h2>Order Preview</h2>
-            <ul id="orderItems"></ul>
-        </section>
+    <section id="orderCard" class="card hidden">
+        <span class="badge" id="orderBadge">Order Parsed</span>
+        <h2>Order Preview</h2>
+        <ul id="orderItems"></ul>
+    </section>
 
-        <section id="confirmationCard" class="card hidden">
-            <h2>🔊 Voice Confirmation</h2>
-            <p id="confirmationText"></p>
-            <audio id="audioPlayer" controls></audio>
-        </section>
+    <section id="confirmationCard" class="card hidden">
+        <h2>🔊 Voice Confirmation</h2>
+        <p id="confirmationText"></p>
+        <audio id="audioPlayer" controls preload="none"></audio>
+    </section>
 
-<section id="correctionCard" class="card hidden">
-    <h2>🔄 Customer Interruption / Correction</h2>
+    <section id="correctionCard" class="card hidden">
+        <h2>🔄 Customer Interruption / Correction</h2>
 
-    <label for="correctionTranscript">
-        What did the customer say?
-    </label>
+        <label for="correctionTranscript">What did the customer say?</label>
+        <textarea id="correctionTranscript"
+            placeholder="Example: Nahi bhaiya, tamatar nahi, pyaz de do."></textarea>
 
-    <textarea
-        id="correctionTranscript"
-        placeholder="Example: Nahi bhaiya, tamatar nahi, pyaz de do."
-    ></textarea>
+        <label for="speechDuration" style="margin-top:14px;">
+            Speech duration (seconds)
+        </label>
 
-    <label for="speechDuration" style="margin-top: 14px;">
-        Speech duration (seconds)
-    </label>
+        <input id="speechDuration" type="number"
+            min="0" step="0.1" value="1.5"
+            style="width:100%; padding:12px; border:1px solid #cbd8ce; border-radius:9px; font:inherit;">
 
-    <input
-        id="speechDuration"
-        type="number"
-        min="0"
-        step="0.1"
-        value="1.5"
-        style="width: 100%; padding: 12px; border: 1px solid #cbd8ce; border-radius: 9px; font: inherit;"
-    >
+        <button id="correctionButton" type="button"
+            style="margin-top:14px; background:#174d38; color:white; width:100%;">
+            Process Customer Interruption
+        </button>
 
-    <button
-        id="correctionButton"
-        type="button"
-        style="margin-top: 14px; background: #174d38; color: white; width: 100%;"
-    >
-        Process Customer Interruption
-    </button>
+        <p id="correctionStatus" role="status"></p>
+    </section>
+</main>
 
-    <p id="correctionStatus" role="status"></p>
-</section>
+<footer>Dukaan Saathi · AI-powered kirana order assistant</footer>
 
-    </main>
+<script>
+    // ==========================================
+    // DOM ELEMENTS AND CONFIGURATION
+    // ==========================================
 
-    <footer>
-        Dukaan Saathi · AI-powered kirana order assistant
-    </footer>
+    const API_BASE_URL = "http://127.0.0.1:8000";
 
-    <script>
-        const transcriptInput = document.getElementById("transcript");
-        const submitButton = document.getElementById("submitButton");
-        const statusText = document.getElementById("status");
-        const errorText = document.getElementById("error");
+    const transcriptInput = document.getElementById("transcript");
+    const submitButton = document.getElementById("submitButton");
+    const statusText = document.getElementById("status");
+    const errorText = document.getElementById("error");
 
-        const orderCard = document.getElementById("orderCard");
-        const orderItems = document.getElementById("orderItems");
-        const orderBadge = document.getElementById("orderBadge");
+    const orderCard = document.getElementById("orderCard");
+    const orderItems = document.getElementById("orderItems");
+    const orderBadge = document.getElementById("orderBadge");
 
-        const confirmationCard = document.getElementById("confirmationCard");
-        const confirmationText = document.getElementById("confirmationText");
-        const audioPlayer = document.getElementById("audioPlayer");
+    const confirmationCard = document.getElementById("confirmationCard");
+    const confirmationText = document.getElementById("confirmationText");
+    const audioPlayer = document.getElementById("audioPlayer");
 
-        let currentAudioUrl = null;
     const correctionCard = document.getElementById("correctionCard");
     const correctionTranscript = document.getElementById("correctionTranscript");
     const correctionButton = document.getElementById("correctionButton");
     const correctionStatus = document.getElementById("correctionStatus");
     const speechDuration = document.getElementById("speechDuration");
 
-        submitButton.addEventListener("click", processOrder);
+    let currentOrder = null;
+    let currentAudioUrl = null;
 
-        async function processOrder() {
-            const transcript = transcriptInput.value.trim();
+    submitButton.addEventListener("click", processOrder);
+    correctionButton.addEventListener("click", processCorrection);
 
-            if (!transcript) {
-                errorText.textContent = "Please enter an order first.";
+
+    // ==========================================
+    // API RESPONSE HANDLING
+    // ==========================================
+
+    async function readResponse(response) {
+        const text = await response.text();
+
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch {
+            throw new Error(
+                "Invalid server response. Check that FastAPI is running."
+            );
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail || "The request could not be processed."
+            );
+        }
+
+        return data;
+    }
+
+
+    // ==========================================
+    // AUDIO MANAGEMENT
+    // ==========================================
+
+    function clearAudio() {
+        audioPlayer.pause();
+        audioPlayer.removeAttribute("src");
+        audioPlayer.load();
+
+        if (currentAudioUrl) {
+            URL.revokeObjectURL(currentAudioUrl);
+            currentAudioUrl = null;
+        }
+    }
+
+    function setAudioFromBase64(audioBase64, autoplay = false) {
+        if (!audioBase64) {
+            clearAudio();
+            return;
+        }
+
+        // Completely remove the previous audio first.
+        clearAudio();
+
+        const binary = atob(audioBase64);
+        const bytes = new Uint8Array(binary.length);
+
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+
+        const audioBlob = new Blob(
+            [bytes],
+            { type: "audio/mpeg" }
+        );
+
+        currentAudioUrl = URL.createObjectURL(audioBlob);
+
+        audioPlayer.src = currentAudioUrl;
+        audioPlayer.load();
+
+        if (autoplay) {
+            audioPlayer.play().catch(() => {
+                correctionStatus.textContent +=
+                    " Press Play to hear the new voice response.";
+            });
+        }
+    }
+
+
+    // ==========================================
+    // PROCESS A NEW ORDER
+    // ==========================================
+
+    async function processOrder() {
+        const transcript = transcriptInput.value.trim();
+
+        if (!transcript) {
+            errorText.textContent = "Please enter an order first.";
+            return;
+        }
+
+        submitButton.disabled = true;
+        statusText.textContent = "Processing order...";
+        errorText.textContent = "";
+
+        currentOrder = null;
+
+        orderCard.classList.add("hidden");
+        confirmationCard.classList.add("hidden");
+        correctionCard.classList.add("hidden");
+
+        clearAudio();
+
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/order`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ transcript })
+                }
+            );
+
+            const data = await readResponse(response);
+
+            currentOrder = data.order;
+            renderOrder(currentOrder);
+
+            confirmationText.textContent = data.confirmation_text || "";
+            confirmationCard.classList.remove("hidden");
+
+            if (data.audio_base64) {
+                setAudioFromBase64(data.audio_base64);
+                statusText.textContent =
+                    "Voice response generated. Press Play to listen.";
+            } else {
+                statusText.textContent =
+                    "Clarification needed. Please review the question.";
+            }
+
+            // Keep this section available for clarification replies too.
+            correctionCard.classList.remove("hidden");
+
+        } catch (error) {
+            errorText.textContent = error.message;
+            statusText.textContent = "Could not process the order.";
+
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+
+    // ==========================================
+    // PROCESS CUSTOMER INTERRUPTION / CORRECTION
+    // ==========================================
+
+    async function processCorrection() {
+        const transcript = correctionTranscript.value.trim();
+        const duration = Number(speechDuration.value);
+
+        if (!transcript) {
+            correctionStatus.textContent =
+                "Please enter what the customer said.";
+            return;
+        }
+
+        if (!Number.isFinite(duration) || duration < 0) {
+            correctionStatus.textContent =
+                "Enter a valid speech duration.";
+            return;
+        }
+
+        if (!currentOrder) {
+            correctionStatus.textContent =
+                "Please place an order first.";
+            return;
+        }
+
+        correctionButton.disabled = true;
+        correctionStatus.textContent = "Processing customer response...";
+        errorText.textContent = "";
+
+        // Pause the current confirmation.
+        audioPlayer.pause();
+
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/order/correct`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        transcript,
+                        duration_seconds: duration,
+                        current_order: currentOrder
+                    })
+                }
+            );
+
+            const data = await readResponse(response);
+
+            // ----------------------------------
+            // BACKCHANNEL: Continue old audio.
+            // ----------------------------------
+
+            if (data.action === "continue") {
+                correctionStatus.textContent =
+                    "Acknowledgement detected. Continuing confirmation.";
+
+                audioPlayer.play().catch(() => {});
+                correctionTranscript.value = "";
                 return;
             }
 
-            submitButton.disabled = true;
-            statusText.textContent = "Processing order... please wait.";
-            errorText.textContent = "";
-
-            orderCard.classList.add("hidden");
-            confirmationCard.classList.add("hidden");
-
-            audioPlayer.pause();
-            audioPlayer.removeAttribute("src");
-            audioPlayer.load();
-
-            if (currentAudioUrl) {
-                URL.revokeObjectURL(currentAudioUrl);
-                currentAudioUrl = null;
-            }
-
-            try {
-                const response = await fetch("/api/order", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ transcript })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.detail || "Unable to process the order.");
-                }
-
+            // Update the order if the server returned one.
+            if (data.order) {
                 currentOrder = data.order;
                 renderOrder(currentOrder);
-            if (!currentOrder.needs_clarification) {
-                correctionCard.classList.remove("hidden");
-            } else {
-                correctionCard.classList.add("hidden");
             }
 
-correctionButton.addEventListener("click", processCorrection);
+            // ----------------------------------
+            // UNCLEAR SPEECH: Ask again.
+            // ----------------------------------
 
-async function processCorrection() {
-    const transcript = correctionTranscript.value.trim();
-    const duration = Number(speechDuration.value);
-
-    if (!transcript) {
-        correctionStatus.textContent = "Please enter what the customer said.";
-        return;
-    }
-
-    if (!Number.isFinite(duration) || duration < 0) {
-        correctionStatus.textContent = "Enter a valid speech duration.";
-        return;
-    }
-
-    if (!currentOrder) {
-        correctionStatus.textContent = "Please place an order first.";
-        return;
-    }
-
-    correctionButton.disabled = true;
-    correctionStatus.textContent = "Understanding customer interruption...";
-    errorText.textContent = "";
-
-    // Pause the current confirmation while processing the interruption.
-    audioPlayer.pause();
-
-    try {
-        const response = await fetch("/api/order/correct", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                transcript,
-                duration_seconds: duration,
-                current_order: currentOrder
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.detail || "Could not process correction.");
-        }
-
-        if (data.action === "continue") {
-            correctionStatus.textContent =
-                "Acknowledgement detected. Continue the current confirmation.";
-
-            audioPlayer.play().catch(() => {});
-            return;
-        }
-
-        if (data.action === "ask_again") {
-            confirmationText.textContent = data.confirmation_text;
-            confirmationCard.classList.remove("hidden");
-
-            correctionStatus.textContent =
-                "Speech was unclear. Please ask the customer to repeat.";
-
-            return;
-        }
-
-        if (data.order.needs_clarification) {
-            confirmationText.textContent = data.confirmation_text;
-            confirmationCard.classList.remove("hidden");
-
-            correctionStatus.textContent =
-                "Correction needs clarification. The previous order has been preserved.";
-
-            return;
-        }
-
-        // Accept the successfully corrected order.
-        currentOrder = data.order;
-        renderOrder(currentOrder);
-
-        confirmationText.textContent = data.confirmation_text;
-        confirmationCard.classList.remove("hidden");
-
-        if (data.audio_base64) {
-            const binary = atob(data.audio_base64);
-            const bytes = new Uint8Array(binary.length);
-
-            for (let i = 0; i < binary.length; i++) {
-                bytes[i] = binary.charCodeAt(i);
-            }
-
-            const audioBlob = new Blob(
-                [bytes],
-                { type: "audio/mpeg" }
-            );
-
-            if (currentAudioUrl) {
-                URL.revokeObjectURL(currentAudioUrl);
-            }
-
-            currentAudioUrl = URL.createObjectURL(audioBlob);
-            audioPlayer.src = currentAudioUrl;
-            audioPlayer.load();
-
-            correctionStatus.textContent =
-                "Order corrected! New voice confirmation is ready.";
-        }
-
-        correctionTranscript.value = "";
-
-    } catch (error) {
-        correctionStatus.textContent =
-            "Correction failed: " + error.message;
-
-    } finally {
-        correctionButton.disabled = false;
-    }
-}
-
-
-                confirmationText.textContent = data.confirmation_text;
+            if (data.action === "ask_again") {
+                confirmationText.textContent = data.confirmation_text || "";
                 confirmationCard.classList.remove("hidden");
 
                 if (data.audio_base64) {
-                    const binary = atob(data.audio_base64);
-                    const bytes = new Uint8Array(binary.length);
-
-                    for (let i = 0; i < binary.length; i++) {
-                        bytes[i] = binary.charCodeAt(i);
-                    }
-
-                    const audioBlob = new Blob(
-                        [bytes],
-                        { type: "audio/mpeg" }
-                    );
-
-                    currentAudioUrl = URL.createObjectURL(audioBlob);
-                    audioPlayer.src = currentAudioUrl;
-                    statusText.textContent =
-                        "Order parsed and voice confirmation generated.";
+                    setAudioFromBase64(data.audio_base64, true);
                 } else {
-                    statusText.textContent =
-                        "Clarification needed. Please review the question.";
+                    clearAudio();
                 }
 
-            } catch (error) {
-                errorText.textContent =
-                    error.message +
-                    "\nMake sure FastAPI is running at 127.0.0.1:8000.";
-                statusText.textContent = "Could not process the order.";
-            } finally {
-                submitButton.disabled = false;
+                correctionStatus.textContent =
+                    "Speech was unclear. Please ask the customer to repeat.";
+
+                correctionTranscript.value = "";
+                return;
             }
-        }
 
-        function renderOrder(order) {
-            orderItems.replaceChildren();
+            // ----------------------------------
+            // PARSER NEEDS CLARIFICATION.
+            // ----------------------------------
 
-            if (order.needs_clarification) {
-                orderBadge.textContent = "Needs Clarification";
+            if (data.order && data.order.needs_clarification) {
+                confirmationText.textContent = data.confirmation_text || "";
+                confirmationCard.classList.remove("hidden");
+
+                if (data.audio_base64) {
+                    setAudioFromBase64(data.audio_base64, true);
+                } else {
+                    clearAudio();
+                }
+
+                correctionStatus.textContent =
+                    "More information is needed. Please answer the clarification question.";
+
+                correctionTranscript.value = "";
+                return;
+            }
+
+            // ----------------------------------
+            // SUCCESSFUL CORRECTION.
+            // ----------------------------------
+
+            confirmationText.textContent =
+                data.confirmation_text || "Order updated.";
+
+            confirmationCard.classList.remove("hidden");
+
+            if (data.audio_base64) {
+                setAudioFromBase64(data.audio_base64, true);
+
+                correctionStatus.textContent =
+                    "Order corrected! Playing updated confirmation.";
             } else {
-                orderBadge.textContent = "Order Parsed";
+                clearAudio();
+
+                correctionStatus.textContent =
+                    "Order updated, but the server returned no audio.";
             }
 
-            for (const item of order.items) {
-                const row = document.createElement("li");
-                const name = document.createElement("span");
-                const quantity = document.createElement("span");
+            correctionTranscript.value = "";
 
-                name.textContent = item.name;
-                quantity.textContent = `${item.quantity} ${item.unit}`;
-                quantity.className = "quantity";
+        } catch (error) {
+            correctionStatus.textContent =
+                "Correction failed: " + error.message;
 
-                row.append(name, quantity);
-                orderItems.appendChild(row);
-            }
-
-            if (order.items.length === 0) {
-                const row = document.createElement("li");
-                row.textContent = "No items in the order.";
-                orderItems.appendChild(row);
-            }
-            
-            orderCard.classList.remove("hidden");
+        } finally {
+            correctionButton.disabled = false;
         }
-    </script>
+    }
+
+
+    // ==========================================
+    // RENDER ORDER
+    // ==========================================
+
+    function renderOrder(order) {
+        orderItems.replaceChildren();
+
+        orderBadge.textContent = order.needs_clarification
+            ? "Needs Clarification"
+            : "Order Parsed";
+
+        for (const item of (order.items || [])) {
+            const row = document.createElement("li");
+
+            const name = document.createElement("span");
+            const quantity = document.createElement("span");
+
+            name.textContent = item.name;
+            quantity.textContent = `${item.quantity} ${item.unit}`;
+            quantity.className = "quantity";
+
+            row.append(name, quantity);
+            orderItems.appendChild(row);
+        }
+
+        if (!order.items || order.items.length === 0) {
+            const row = document.createElement("li");
+            row.textContent = "No items in the order.";
+            orderItems.appendChild(row);
+        }
+
+        orderCard.classList.remove("hidden");
+    }
+</script>
 </body>
 </html>
