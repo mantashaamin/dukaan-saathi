@@ -1,4 +1,3 @@
-
 from enum import Enum
 
 
@@ -18,14 +17,31 @@ BACKCHANNEL_WORDS = {
     "okay",
 }
 
+
 INTERRUPTION_WORDS = {
+    # Explicit interruptions
     "ruko",
+    "ruk jao",
     "nahi",
     "ek minute",
     "wait",
     "galat",
     "cancel",
     "badlo",
+
+    # Contextual order corrections
+    "hata do",
+    "add kar do",
+    "ki jagah",
+    "change karni hai",
+    "order mein correction",
+    "quantity change",
+    "quantity badlo",
+    "badal do",
+    "kam kar do",
+    "zyada kar do",
+    "replace",
+    "instead",
 }
 
 
@@ -34,33 +50,27 @@ def classify_interruption(
     duration_seconds: float,
 ) -> TurnAction:
     """
-    Classify customer speech during assistant playback
-    using extracted speech features.
+    Classify customer speech during assistant playback.
+
+    Short backchannels continue playback.
+    Explicit or contextual corrections stop playback.
+    Uncertain speech asks the customer to repeat.
     """
 
-    # Import here to avoid a circular import.
     from turntaking.features import extract_features
 
     features = extract_features(transcript, duration_seconds)
 
-    # No usable speech detected.
     if features["is_empty"]:
         return TurnAction.ASK_AGAIN
 
-    # Short acknowledgements should not interrupt playback.
     if (
         features["is_backchannel"]
         and features["duration_seconds"] <= 1.0
     ):
         return TurnAction.CONTINUE
 
-    # Explicit correction or interruption.
     if features["has_interruption_word"]:
         return TurnAction.STOP_AND_CORRECT
 
-    # Longer speech is likely a genuine interruption.
-    if features["is_long_speech"]:
-        return TurnAction.STOP_AND_CORRECT
-
-    # Uncertain speech: ask the customer to repeat.
     return TurnAction.ASK_AGAIN
