@@ -1,9 +1,39 @@
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+*.mp3
+# Python virtual environments
 .venv/
+venv/
+env/
+
+# Python cache
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# macOS
 .DS_Store
+
+# IDE settings
+.vscode/
+
+# Temporary audio and generated files
 *.pcm
 *.m4a
 *.wav
-kirana-confirmation.mp3 
-order-confirmation.mp3
+
+# Local temporary files
+*.log
+*.tmp
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
