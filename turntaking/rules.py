@@ -7,6 +7,7 @@ class TurnAction(str, Enum):
     ASK_AGAIN = "ask_again"
 
 
+# Short acknowledgements that should not interrupt playback.
 BACKCHANNEL_WORDS = {
     "haan",
     "hmm",
@@ -15,33 +16,59 @@ BACKCHANNEL_WORDS = {
     "theek hai",
     "ok",
     "okay",
+    "haan bilkul",
+    "haan sahi hai",
 }
 
 
+# Explicit interruption and correction phrases.
 INTERRUPTION_WORDS = {
-    # Explicit interruptions
+    # Direct interruptions
     "ruko",
     "ruk jao",
-    "nahi",
+    "rukna zara",
+    "ruko zara",
     "ek minute",
     "wait",
     "galat",
     "cancel",
+    "nahi",
     "badlo",
 
-    # Contextual order corrections
+    # Removing or replacing products
     "hata do",
+    "hata dijiye",
     "add kar do",
+    "add karna hai",
     "ki jagah",
-    "change karni hai",
-    "order mein correction",
-    "quantity change",
-    "quantity badlo",
     "badal do",
-    "kam kar do",
-    "zyada kar do",
     "replace",
     "instead",
+
+    # Quantity changes
+    "quantity change",
+    "quantity badlo",
+    "quantity aadhi kar do",
+    "quantity aadha kar do",
+    "aadhi kar do",
+    "aadha kar do",
+    "kam kar do",
+    "zyada kar do",
+
+    # Contextual order corrections
+    "change karni hai",
+    "order mein correction",
+    "is order mein ek change hai",
+    "order mein ek change hai",
+    "ek item aur add karna hai",
+    "ek cheez aur add karni hai",
+
+    # Negative product instructions
+    "mat daliye",
+    "mat dalna",
+    "nahi chahiye",
+    "cheeni mat daliye",
+    "chini mat daliye",
 }
 
 
@@ -52,16 +79,23 @@ def classify_interruption(
     """
     Classify customer speech during assistant playback.
 
-    Short backchannels continue playback.
+    Ambiguous statements ask for clarification.
+    Short backchannels allow playback to continue.
     Explicit or contextual corrections stop playback.
-    Uncertain speech asks the customer to repeat.
     """
 
     from turntaking.features import extract_features
 
-    features = extract_features(transcript, duration_seconds)
+    features = extract_features(
+        transcript,
+        duration_seconds,
+    )
 
     if features["is_empty"]:
+        return TurnAction.ASK_AGAIN
+
+    # Ambiguity takes priority over correction keywords.
+    if features["is_ambiguous"]:
         return TurnAction.ASK_AGAIN
 
     if (
