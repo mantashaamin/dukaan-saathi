@@ -4,555 +4,1756 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dukaan Saathi | Voice Order Assistant</title>
+
+    <meta name="theme-color" content="#123c2c">
+    <meta name="description" content="Dukaan Saathi — a Hindi and Hinglish voice ordering assistant for kirana stores.">
+
+    <title>Dukaan Saathi — Voice Order Assistant</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23123c2c'/%3E%3Cpath d='M25 38h50l-5 39H30z' fill='%23e9f1e9'/%3E%3Cpath d='M38 38v-9a12 12 0 0 1 24 0v9' fill='none' stroke='%23e9f1e9' stroke-width='6'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        * { box-sizing: border-box; }
+        :root {
+            --green: #174d38;
+            --green-dark: #123c2c;
+            --green-light: #e8f3ec;
+            --green-bright: #278052;
+            --background: #f5f7f3;
+            --surface: #ffffff;
+            --text: #203128;
+            --muted: #738078;
+            --border: #e5ebe5;
+            --red: #c84b43;
+            --shadow: 0 12px 35px rgba(24, 57, 39, 0.055);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: #f4f7f4;
-            color: #203128;
+            background: var(--background);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+            min-height: 100vh;
         }
 
-        header {
-            background: #174d38;
-            color: white;
-            padding: 24px 20px;
-            text-align: center;
-        }
-
-        header h1 { margin: 0 0 8px; font-size: 30px; }
-        header p { margin: 0; color: #d8eadf; }
-
-        main {
-            max-width: 760px;
-            margin: 30px auto;
-            padding: 0 16px;
-        }
-
-        .card {
-            background: white;
-            border: 1px solid #e0e9e2;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 18px rgba(20, 60, 40, 0.05);
-        }
-
-        h2 { font-size: 20px; margin: 0 0 16px; }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 115px;
-            resize: vertical;
-            border: 1px solid #cbd8ce;
-            border-radius: 10px;
-            padding: 13px;
+        button, textarea, input {
             font: inherit;
-            line-height: 1.5;
-        }
-
-        textarea:focus {
-            outline: 2px solid #7ab99a;
-            border-color: #28784f;
         }
 
         button {
-            border: 0;
-            border-radius: 9px;
-            padding: 12px 18px;
-            font: inherit;
-            font-weight: 600;
             cursor: pointer;
         }
 
-        #submitButton {
-            margin-top: 14px;
-            background: #176b46;
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .topbar {
+            background: var(--green-dark);
             color: white;
+            padding: 0 7%;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: "Manrope", sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .brand-mark {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: #e5f1e7;
+            color: var(--green);
+        }
+
+        .brand-mark svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .top-status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #d7e8dc;
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #75d59a;
+            box-shadow: 0 0 0 4px rgba(117, 213, 154, 0.13);
+        }
+
+        .hero {
+            background: var(--green-dark);
+            color: white;
+            padding: 48px 20px 72px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 13px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: #d6e9dc;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.16;
+            letter-spacing: -1.8px;
+            margin: 20px 0 12px;
+        }
+
+        .hero p {
+            color: #c9dbce;
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 530px;
+            margin: auto;
+        }
+
+        .main-container {
+            width: min(1080px, calc(100% - 36px));
+            margin: -32px auto 70px;
+            position: relative;
+        }
+
+        .section-heading {
+            margin: 0 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .section-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 19px;
+        }
+
+        .workflow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 17px;
+            margin-bottom: 19px;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .step-icon {
+            width: 39px;
+            height: 39px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: var(--green-light);
+            color: var(--green);
+        }
+
+        .step-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .workflow-step strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .workflow-step span {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .microphone-panel {
+            text-align: center;
+            padding: 32px 25px;
+        }
+
+        .mic-circle {
+            width: 76px;
+            height: 76px;
+            margin: 5px auto 17px;
+            border-radius: 24px;
+            background: var(--green-light);
+            color: var(--green);
+            display: grid;
+            place-items: center;
+        }
+
+        .mic-circle svg {
+            width: 34px;
+            height: 34px;
+        }
+
+        .microphone-panel h2 {
+            font-family: "Manrope", sans-serif;
+            font-size: 22px;
+            letter-spacing: -0.7px;
+            margin: 0 0 9px;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            max-width: 500px;
+            margin: 0 auto 22px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 11px;
+            justify-content: center;
+        }
+
+        .button {
+            min-height: 47px;
+            border: 0;
+            border-radius: 11px;
+            padding: 12px 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .button-primary {
+            color: white;
+            background: var(--green);
+        }
+
+        .button-primary:hover:not(:disabled) {
+            background: var(--green-bright);
+            box-shadow: 0 7px 18px rgba(23, 77, 56, 0.17);
+        }
+
+        .button-danger {
+            color: white;
+            background: var(--red);
+        }
+
+        .button-danger:hover:not(:disabled) {
+            background: #aa3932;
+        }
+
+        .button-secondary {
+            background: #edf3ee;
+            color: var(--green);
+            border: 1px solid #dce8df;
+        }
+
+        .button-full {
             width: 100%;
         }
 
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        #status, #correctionStatus {
-            margin-top: 14px;
-            color: #52665a;
-            font-size: 14px;
+        .status-message {
+            color: var(--muted);
+            font-size: 13px;
+            min-height: 20px;
+            margin: 17px 0 0;
         }
 
-        .hidden { display: none; }
+        .recording-indicator {
+            color: var(--red);
+            font-weight: 700;
+        }
 
-        #orderItems {
+        .recording-indicator::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--red);
+            margin-right: 7px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        .order-card {
+            padding: 26px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 19px;
+        }
+
+        .order-header h2 {
+            font-family: "Manrope", sans-serif;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .badge {
+            padding: 7px 11px;
+            background: var(--green-light);
+            color: var(--green);
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .order-items {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        #orderItems li {
+        .order-items li {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 13px 0;
+            gap: 15px;
+            padding: 15px 0;
             border-bottom: 1px solid #edf1ed;
+            font-size: 14px;
         }
 
-        #orderItems li:last-child { border-bottom: 0; }
+        .order-items li:last-child {
+            border-bottom: 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+        }
 
         .quantity {
-            color: #176b46;
-            font-weight: 700;
+            color: var(--green);
+            font-weight: 800;
             white-space: nowrap;
         }
 
-        .badge {
-            display: inline-block;
-            background: #e1f4e8;
-            color: #176b46;
-            padding: 5px 10px;
-            border-radius: 20px;
+        .confirmation-text {
+            background: #f5f8f5;
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 12px;
+            line-height: 1.7;
+            font-size: 14px;
+            margin: 0 0 17px;
+        }
+
+        audio {
+            width: 100%;
+            height: 44px;
+        }
+
+        .correction-panel {
+            border-top: 3px solid #b8d9c2;
+        }
+
+        .correction-panel textarea {
+            width: 100%;
+            min-height: 85px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            padding: 13px;
+            resize: vertical;
+            color: var(--text);
+            background: #fcfdfc;
+            outline: none;
+            font-size: 14px;
+        }
+
+        textarea:focus {
+            border-color: #76a98a;
+            box-shadow: 0 0 0 3px rgba(39, 128, 82, 0.08);
+        }
+
+        .fallback-label {
+            display: block;
+            color: var(--muted);
             font-size: 12px;
+            margin: 20px 0 9px;
             font-weight: 700;
-            margin-bottom: 14px;
         }
 
-        #confirmationText { line-height: 1.7; margin-bottom: 16px; }
-        audio { width: 100%; }
+        .correction-actions {
+            margin-top: 12px;
+        }
 
-        #error {
+        .error-message {
             color: #b42318;
+            font-size: 13px;
+            line-height: 1.6;
             white-space: pre-wrap;
-            line-height: 1.5;
         }
 
-        footer {
+        .hidden {
+            display: none !important;
+        }
+
+        .footer {
             text-align: center;
-            color: #66766c;
-            padding: 12px 20px 30px;
-            font-size: 13px;
+            padding: 0 20px 35px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 650px) {
+            .topbar {
+                padding: 0 18px;
+                height: 66px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .top-status {
+                font-size: 11px;
+            }
+
+            .hero {
+                padding: 40px 20px 65px;
+            }
+
+            .workflow {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .microphone-panel {
+                padding: 28px 18px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .button-row .button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-<header>
-    <h1>🛍️ Dukaan Saathi</h1>
-    <p>Your Hinglish voice assistant for kirana orders</p>
+
+<header class="topbar">
+
+    <div class="brand">
+        <div class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 8h18l-1.5 12h-15z"/>
+                <path d="M8 8V6a4 4 0 0 1 8 0v2"/>
+            </svg>
+        </div>
+        Dukaan Saathi
+    </div>
+
+    <div class="top-status">
+        <span class="status-dot"></span>
+        Voice assistant
+    </div>
+
 </header>
 
-<main>
-    <section class="card">
-        <h2>Place an Order</h2>
 
-        <label for="transcript">Enter what the customer said</label>
+<section class="hero">
 
-        <textarea id="transcript"
-            placeholder="Example: Bhaiya ek kilo chawal aur do kilo aloo dena">Bhaiya ek kilo chawal aur do kilo aloo dena</textarea>
+    <div class="eyebrow">
+        <span>●</span>
+        Built for everyday kirana orders
+    </div>
 
-        <button id="submitButton" type="button">
-            Parse Order & Generate Voice
-        </button>
+    <h1>Orders made simple.<br>Just speak naturally.</h1>
 
-        <p id="status" role="status">Ready to process an order.</p>
-        <p id="error" role="alert"></p>
+    <p>
+        A Hindi and Hinglish voice assistant that understands
+        customer orders, handles corrections and speaks
+        confirmations.
+    </p>
+
+</section>
+
+
+<main class="main-container">
+
+    <!-- WORKFLOW -->
+
+    <div class="workflow">
+
+        <div class="workflow-step">
+
+            <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <rect x="9" y="2" width="6" height="13" rx="3"/>
+                    <path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>
+                </svg>
+            </div>
+
+            <div>
+                <strong>Speak an order</strong>
+                <span>Hindi or Hinglish voice input</span>
+            </div>
+
+        </div>
+
+        <div class="workflow-step">
+
+            <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M20 7 10 17l-5-5"/>
+                    <path d="M21 12a9 9 0 1 1-4-7.5"/>
+                </svg>
+            </div>
+
+            <div>
+                <strong>Confirm the order</strong>
+                <span>Structured items and spoken response</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NEW ORDER MICROPHONE -->
+
+    <section class="panel microphone-panel">
+
+        <div class="mic-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <rect x="9" y="2" width="6" height="13" rx="3"/>
+                <path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>
+            </svg>
+        </div>
+
+        <h2>Speak Your Order</h2>
+
+        <p class="description">
+            Press the microphone button, speak naturally,
+            and stop when the customer finishes their order.
+        </p>
+
+        <div class="button-row">
+
+            <button
+                id="startRecordingButton"
+                class="button button-primary"
+                type="button">
+
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="2" width="6" height="13" rx="3"/>
+                    <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
+                </svg>
+
+                Start Recording
+
+            </button>
+
+            <button
+                id="stopRecordingButton"
+                class="button button-danger"
+                type="button"
+                disabled>
+
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="6" width="12" height="12" rx="2"/>
+                </svg>
+
+                Stop & Transcribe
+
+            </button>
+
+        </div>
+
+        <p id="recordingStatus" class="status-message" role="status">
+            Microphone is ready.
+        </p>
+
     </section>
 
-    <section id="orderCard" class="card hidden">
-        <span class="badge" id="orderBadge">Order Parsed</span>
-        <h2>Order Preview</h2>
-        <ul id="orderItems"></ul>
+
+    <!-- ORDER PREVIEW -->
+
+    <section id="orderCard" class="panel order-card hidden">
+
+        <div class="order-header">
+
+            <h2>Order Preview</h2>
+
+            <span class="badge" id="orderBadge">
+                Order Parsed
+            </span>
+
+        </div>
+
+        <ul id="orderItems" class="order-items"></ul>
+
     </section>
 
-    <section id="confirmationCard" class="card hidden">
-        <h2>🔊 Voice Confirmation</h2>
-        <p id="confirmationText"></p>
-        <audio id="audioPlayer" controls preload="none"></audio>
+
+    <!-- VOICE CONFIRMATION -->
+
+    <section id="confirmationCard" class="panel hidden">
+
+        <div class="section-heading">
+
+            <h2>Voice Confirmation</h2>
+
+            <span class="section-label">Gnani Timbre</span>
+
+        </div>
+
+        <p id="confirmationText" class="confirmation-text"></p>
+
+        <audio
+            id="audioPlayer"
+            controls
+            preload="none">
+        </audio>
+
     </section>
 
-    <section id="correctionCard" class="card hidden">
-        <h2>🔄 Customer Interruption / Correction</h2>
 
-        <label for="correctionTranscript">What did the customer say?</label>
-        <textarea id="correctionTranscript"
-            placeholder="Example: Nahi bhaiya, tamatar nahi, pyaz de do."></textarea>
+    <!-- CUSTOMER CORRECTION -->
 
-        <label for="speechDuration" style="margin-top:14px;">
-            Speech duration (seconds)
+    <section id="correctionCard" class="panel correction-panel hidden">
+
+        <div class="section-heading">
+
+            <h2>Customer Correction</h2>
+
+            <span class="section-label">Voice input</span>
+
+        </div>
+
+        <p class="description" style="margin:0 0 20px; max-width:none;">
+            If the customer changes something, record their
+            correction and Dukaan Saathi will update the existing order.
+        </p>
+
+        <div class="mic-circle" style="margin:0 0 17px; width:58px; height:58px; border-radius:17px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M12 20v-6"/>
+                <path d="M8 14a4 4 0 0 0 8 0V6a4 4 0 0 0-8 0z"/>
+                <path d="M5 12v2a7 7 0 0 0 14 0v-2"/>
+            </svg>
+        </div>
+
+        <div class="button-row">
+
+            <button
+                id="startCorrectionRecordingButton"
+                class="button button-primary"
+                type="button">
+
+                Record Correction
+
+            </button>
+
+            <button
+                id="stopCorrectionRecordingButton"
+                class="button button-danger"
+                type="button"
+                disabled>
+
+                Stop & Process
+
+            </button>
+
+        </div>
+
+        <p id="correctionRecordingStatus" class="status-message" role="status">
+            Ready to record a correction.
+        </p>
+
+        <label class="fallback-label" for="correctionTranscript">
+            Or type a correction instead
         </label>
 
-        <input id="speechDuration" type="number"
-            min="0" step="0.1" value="1.5"
-            style="width:100%; padding:12px; border:1px solid #cbd8ce; border-radius:9px; font:inherit;">
+        <textarea
+            id="correctionTranscript"
+            placeholder="Example: Aloo nahi, tamatar de do."></textarea>
 
-        <button id="correctionButton" type="button"
-            style="margin-top:14px; background:#174d38; color:white; width:100%;">
-            Process Customer Interruption
-        </button>
+        <input
+            id="speechDuration"
+            type="hidden"
+            value="1.5">
 
-        <p id="correctionStatus" role="status"></p>
+        <div class="correction-actions">
+
+            <button
+                id="correctionButton"
+                class="button button-secondary button-full"
+                type="button">
+
+                Process Typed Correction
+
+            </button>
+
+        </div>
+
+        <p id="correctionStatus" class="status-message" role="status"></p>
+
     </section>
+
+
+    <!-- ERROR -->
+
+    <p id="error" class="error-message" role="alert"></p>
+
 </main>
 
-<footer>Dukaan Saathi · AI-powered kirana order assistant</footer>
+
+<footer class="footer">
+    Dukaan Saathi · Making everyday ordering more natural
+</footer>
+
 
 <script>
-    // ==========================================
-    // DOM ELEMENTS AND CONFIGURATION
-    // ==========================================
 
-    const API_BASE_URL = "";
+// ==========================================
+// CONFIGURATION
+// ==========================================
 
-    const transcriptInput = document.getElementById("transcript");
-    const submitButton = document.getElementById("submitButton");
-    const statusText = document.getElementById("status");
-    const errorText = document.getElementById("error");
-
-    const orderCard = document.getElementById("orderCard");
-    const orderItems = document.getElementById("orderItems");
-    const orderBadge = document.getElementById("orderBadge");
-
-    const confirmationCard = document.getElementById("confirmationCard");
-    const confirmationText = document.getElementById("confirmationText");
-    const audioPlayer = document.getElementById("audioPlayer");
-
-    const correctionCard = document.getElementById("correctionCard");
-    const correctionTranscript = document.getElementById("correctionTranscript");
-    const correctionButton = document.getElementById("correctionButton");
-    const correctionStatus = document.getElementById("correctionStatus");
-    const speechDuration = document.getElementById("speechDuration");
-
-    let currentOrder = null;
-    let currentAudioUrl = null;
-
-    submitButton.addEventListener("click", processOrder);
-    correctionButton.addEventListener("click", processCorrection);
+const API_BASE_URL = "";
 
 
-    // ==========================================
-    // API RESPONSE HANDLING
-    // ==========================================
+// ==========================================
+// DOM ELEMENTS
+// ==========================================
 
-    async function readResponse(response) {
-        const text = await response.text();
+const startRecordingButton =
+    document.getElementById("startRecordingButton");
 
-        let data;
+const stopRecordingButton =
+    document.getElementById("stopRecordingButton");
 
-        try {
-            data = JSON.parse(text);
-        } catch {
-            throw new Error(
-                "Invalid server response. Check that FastAPI is running."
-            );
-        }
+const recordingStatus =
+    document.getElementById("recordingStatus");
 
-        if (!response.ok) {
-            throw new Error(
-                data.detail || "The request could not be processed."
-            );
-        }
+const startCorrectionRecordingButton =
+    document.getElementById("startCorrectionRecordingButton");
 
-        return data;
+const stopCorrectionRecordingButton =
+    document.getElementById("stopCorrectionRecordingButton");
+
+const correctionRecordingStatus =
+    document.getElementById("correctionRecordingStatus");
+
+const orderCard =
+    document.getElementById("orderCard");
+
+const orderItems =
+    document.getElementById("orderItems");
+
+const orderBadge =
+    document.getElementById("orderBadge");
+
+const confirmationCard =
+    document.getElementById("confirmationCard");
+
+const confirmationText =
+    document.getElementById("confirmationText");
+
+const audioPlayer =
+    document.getElementById("audioPlayer");
+
+const correctionCard =
+    document.getElementById("correctionCard");
+
+const correctionTranscript =
+    document.getElementById("correctionTranscript");
+
+const correctionButton =
+    document.getElementById("correctionButton");
+
+const correctionStatus =
+    document.getElementById("correctionStatus");
+
+const speechDuration =
+    document.getElementById("speechDuration");
+
+const errorText =
+    document.getElementById("error");
+
+
+// ==========================================
+// APPLICATION STATE
+// ==========================================
+
+let currentOrder = null;
+let currentAudioUrl = null;
+
+let audioContext = null;
+let microphoneStream = null;
+let microphoneSource = null;
+let scriptProcessor = null;
+let silentGain = null;
+
+let recordedChunks = [];
+
+let isRecording = false;
+let recordingMode = null;
+
+
+// ==========================================
+// EVENT LISTENERS
+// ==========================================
+
+startRecordingButton.addEventListener(
+    "click",
+    () => startRecording("order")
+);
+
+stopRecordingButton.addEventListener(
+    "click",
+    stopRecording
+);
+
+startCorrectionRecordingButton.addEventListener(
+    "click",
+    () => startRecording("correction")
+);
+
+stopCorrectionRecordingButton.addEventListener(
+    "click",
+    stopRecording
+);
+
+correctionButton.addEventListener(
+    "click",
+    processCorrection
+);
+
+
+// ==========================================
+// API RESPONSE HANDLING
+// ==========================================
+
+async function readResponse(response) {
+
+    const text = await response.text();
+
+    let data;
+
+    try {
+
+        data = JSON.parse(text);
+
+    } catch {
+
+        throw new Error(
+            "Invalid server response. Check FastAPI."
+        );
     }
 
+    if (!response.ok) {
 
-    // ==========================================
-    // AUDIO MANAGEMENT
-    // ==========================================
-
-    function clearAudio() {
-        audioPlayer.pause();
-        audioPlayer.removeAttribute("src");
-        audioPlayer.load();
-
-        if (currentAudioUrl) {
-            URL.revokeObjectURL(currentAudioUrl);
-            currentAudioUrl = null;
-        }
+        throw new Error(
+            data.detail || "Request failed."
+        );
     }
 
-    function setAudioFromBase64(audioBase64, autoplay = false) {
-        if (!audioBase64) {
-            clearAudio();
-            return;
-        }
+    return data;
+}
 
-        // Completely remove the previous audio first.
+
+// ==========================================
+// AUDIO MANAGEMENT
+// ==========================================
+
+function clearAudio() {
+
+    audioPlayer.pause();
+
+    audioPlayer.removeAttribute("src");
+
+    audioPlayer.load();
+
+    if (currentAudioUrl) {
+
+        URL.revokeObjectURL(currentAudioUrl);
+
+        currentAudioUrl = null;
+    }
+}
+
+
+function setAudioFromBase64(audioBase64, autoplay = false) {
+
+    if (!audioBase64) {
+
         clearAudio();
 
-        const binary = atob(audioBase64);
-        const bytes = new Uint8Array(binary.length);
+        return;
+    }
 
-        for (let i = 0; i < binary.length; i++) {
-            bytes[i] = binary.charCodeAt(i);
+    clearAudio();
+
+    const binary = atob(audioBase64);
+
+    const bytes = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+
+        bytes[i] = binary.charCodeAt(i);
+    }
+
+    const audioBlob = new Blob(
+        [bytes],
+        { type: "audio/mpeg" }
+    );
+
+    currentAudioUrl = URL.createObjectURL(audioBlob);
+
+    audioPlayer.src = currentAudioUrl;
+
+    audioPlayer.load();
+
+    if (autoplay) {
+
+        audioPlayer.play().catch(() => {
+
+            correctionStatus.textContent +=
+                " Press Play to hear the confirmation.";
+        });
+    }
+}
+
+
+// ==========================================
+// RENDER ORDER
+// ==========================================
+
+function renderOrder(order) {
+
+    orderItems.replaceChildren();
+
+    orderBadge.textContent = order.needs_clarification
+        ? "Needs Clarification"
+        : "Order Parsed";
+
+    for (const item of (order.items || [])) {
+
+        const row = document.createElement("li");
+
+        const name = document.createElement("span");
+
+        const quantity = document.createElement("span");
+
+        name.textContent = item.name;
+
+        name.className = "item-name";
+
+        quantity.textContent =
+            `${item.quantity} ${item.unit}`;
+
+        quantity.className = "quantity";
+
+        row.append(name, quantity);
+
+        orderItems.appendChild(row);
+    }
+
+    if (!order.items || order.items.length === 0) {
+
+        const row = document.createElement("li");
+
+        row.textContent = "No items in the order.";
+
+        orderItems.appendChild(row);
+    }
+
+    orderCard.classList.remove("hidden");
+}
+
+
+// ==========================================
+// DISPLAY ORDER RESPONSE
+// ==========================================
+
+function displayOrderResponse(data) {
+
+    currentOrder = data.order;
+
+    renderOrder(currentOrder);
+
+    confirmationText.textContent =
+        data.confirmation_text || "";
+
+    confirmationCard.classList.remove("hidden");
+
+    if (data.audio_base64) {
+
+        setAudioFromBase64(data.audio_base64);
+
+    } else {
+
+        clearAudio();
+    }
+
+    correctionCard.classList.remove("hidden");
+
+    errorText.textContent = "";
+}
+
+
+// ==========================================
+// MICROPHONE: START RECORDING
+// ==========================================
+
+async function startRecording(mode = "order") {
+
+    if (isRecording) return;
+
+    if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ) {
+
+        const message =
+            "Your browser does not support microphone recording.";
+
+        if (mode === "correction") {
+
+            correctionRecordingStatus.textContent = message;
+
+        } else {
+
+            recordingStatus.textContent = message;
         }
 
-        const audioBlob = new Blob(
-            [bytes],
-            { type: "audio/mpeg" }
+        return;
+    }
+
+    recordingMode = mode;
+
+    const statusElement = mode === "correction"
+        ? correctionRecordingStatus
+        : recordingStatus;
+
+    try {
+
+        statusElement.textContent =
+            "Requesting microphone permission...";
+
+        microphoneStream =
+            await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    channelCount: 1,
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            });
+
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
+
+        audioContext = new AudioContextClass();
+
+        if (audioContext.state === "suspended") {
+
+            await audioContext.resume();
+        }
+
+        microphoneSource =
+            audioContext.createMediaStreamSource(
+                microphoneStream
+            );
+
+        scriptProcessor =
+            audioContext.createScriptProcessor(
+                4096,
+                1,
+                1
+            );
+
+        recordedChunks = [];
+
+        scriptProcessor.onaudioprocess = function(event) {
+
+            if (!isRecording) return;
+
+            const inputData =
+                event.inputBuffer.getChannelData(0);
+
+            recordedChunks.push(
+                new Float32Array(inputData)
+            );
+        };
+
+        silentGain = audioContext.createGain();
+
+        silentGain.gain.value = 0;
+
+        microphoneSource.connect(scriptProcessor);
+
+        scriptProcessor.connect(silentGain);
+
+        silentGain.connect(audioContext.destination);
+
+        isRecording = true;
+
+        startRecordingButton.disabled = true;
+
+        startCorrectionRecordingButton.disabled = true;
+
+        if (mode === "correction") {
+
+            stopCorrectionRecordingButton.disabled = false;
+
+            statusElement.innerHTML =
+                '<span class="recording-indicator">Recording customer correction...</span>';
+
+        } else {
+
+            stopRecordingButton.disabled = false;
+
+            statusElement.innerHTML =
+                '<span class="recording-indicator">Recording order...</span>';
+        }
+
+    } catch (error) {
+
+        cleanupMicrophone();
+
+        statusElement.textContent =
+            "Microphone error: " + error.message;
+
+        recordingMode = null;
+    }
+}
+
+
+// ==========================================
+// MICROPHONE: STOP RECORDING
+// ==========================================
+
+async function stopRecording() {
+
+    if (!isRecording) return;
+
+    const mode = recordingMode;
+
+    isRecording = false;
+
+    const statusElement = mode === "correction"
+        ? correctionRecordingStatus
+        : recordingStatus;
+
+    statusElement.textContent =
+        "Preparing audio...";
+
+    const sampleRate = audioContext.sampleRate;
+
+    const chunks = recordedChunks;
+
+    cleanupMicrophone();
+
+    if (chunks.length === 0) {
+
+        statusElement.textContent =
+            "No audio detected. Please try again.";
+
+        recordingMode = null;
+
+        return;
+    }
+
+    const totalLength = chunks.reduce(
+        (total, chunk) => total + chunk.length,
+        0
+    );
+
+    const combinedAudio = new Float32Array(totalLength);
+
+    let offset = 0;
+
+    for (const chunk of chunks) {
+
+        combinedAudio.set(chunk, offset);
+
+        offset += chunk.length;
+    }
+
+    let pcmAudio;
+
+    try {
+
+        pcmAudio = downsampleAndConvert(
+            combinedAudio,
+            sampleRate,
+            16000
         );
 
-        currentAudioUrl = URL.createObjectURL(audioBlob);
+    } catch (error) {
 
-        audioPlayer.src = currentAudioUrl;
-        audioPlayer.load();
+        statusElement.textContent = error.message;
 
-        if (autoplay) {
-            audioPlayer.play().catch(() => {
-                correctionStatus.textContent +=
-                    " Press Play to hear the new voice response.";
-            });
-        }
+        recordingMode = null;
+
+        return;
     }
 
+    if (pcmAudio.byteLength < 2) {
 
-    // ==========================================
-    // PROCESS A NEW ORDER
-    // ==========================================
+        statusElement.textContent =
+            "Recording was too short. Please try again.";
 
-    async function processOrder() {
-        const transcript = transcriptInput.value.trim();
+        recordingMode = null;
 
-        if (!transcript) {
-            errorText.textContent = "Please enter an order first.";
-            return;
-        }
-
-        submitButton.disabled = true;
-        statusText.textContent = "Processing order...";
-        errorText.textContent = "";
-
-        currentOrder = null;
-
-        orderCard.classList.add("hidden");
-        confirmationCard.classList.add("hidden");
-        correctionCard.classList.add("hidden");
-
-        clearAudio();
-
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/order`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ transcript })
-                }
-            );
-
-            const data = await readResponse(response);
-
-            currentOrder = data.order;
-            renderOrder(currentOrder);
-
-            confirmationText.textContent = data.confirmation_text || "";
-            confirmationCard.classList.remove("hidden");
-
-            if (data.audio_base64) {
-                setAudioFromBase64(data.audio_base64);
-                statusText.textContent =
-                    "Voice response generated. Press Play to listen.";
-            } else {
-                statusText.textContent =
-                    "Clarification needed. Please review the question.";
-            }
-
-            // Keep this section available for clarification replies too.
-            correctionCard.classList.remove("hidden");
-
-        } catch (error) {
-            errorText.textContent = error.message;
-            statusText.textContent = "Could not process the order.";
-
-        } finally {
-            submitButton.disabled = false;
-        }
+        return;
     }
 
+    const durationSeconds =
+        pcmAudio.byteLength / 32000;
 
-    // ==========================================
-    // PROCESS CUSTOMER INTERRUPTION / CORRECTION
-    // ==========================================
+    if (mode === "correction") {
 
-    async function processCorrection() {
-        const transcript = correctionTranscript.value.trim();
-        const duration = Number(speechDuration.value);
+        speechDuration.value =
+            durationSeconds.toFixed(2);
 
-        if (!transcript) {
-            correctionStatus.textContent =
-                "Please enter what the customer said.";
-            return;
+        await transcribeCorrectionRecording(pcmAudio);
+
+    } else {
+
+        await transcribeRecording(pcmAudio);
+    }
+
+    recordingMode = null;
+}
+
+
+// ==========================================
+// CLEAN UP MICROPHONE
+// ==========================================
+
+function cleanupMicrophone() {
+
+    if (scriptProcessor) {
+
+        scriptProcessor.disconnect();
+
+        scriptProcessor.onaudioprocess = null;
+
+        scriptProcessor = null;
+    }
+
+    if (microphoneSource) {
+
+        microphoneSource.disconnect();
+
+        microphoneSource = null;
+    }
+
+    if (silentGain) {
+
+        silentGain.disconnect();
+
+        silentGain = null;
+    }
+
+    if (microphoneStream) {
+
+        microphoneStream.getTracks().forEach(track => {
+            track.stop();
+        });
+
+        microphoneStream = null;
+    }
+
+    if (audioContext) {
+
+        const context = audioContext;
+
+        audioContext = null;
+
+        context.close().catch(() => {});
+    }
+
+    isRecording = false;
+
+    startRecordingButton.disabled = false;
+
+    stopRecordingButton.disabled = true;
+
+    startCorrectionRecordingButton.disabled = false;
+
+    stopCorrectionRecordingButton.disabled = true;
+}
+
+
+// ==========================================
+// CONVERT AUDIO TO 16 KHz PCM
+// ==========================================
+
+function downsampleAndConvert(
+    input,
+    inputSampleRate,
+    outputSampleRate
+) {
+
+    if (inputSampleRate < outputSampleRate) {
+
+        throw new Error(
+            "Microphone sample rate is below 16000 Hz."
+        );
+    }
+
+    const ratio = inputSampleRate / outputSampleRate;
+
+    const outputLength = Math.floor(
+        input.length / ratio
+    );
+
+    const outputBuffer = new ArrayBuffer(
+        outputLength * 2
+    );
+
+    const view = new DataView(outputBuffer);
+
+    for (let i = 0; i < outputLength; i++) {
+
+        const start = Math.floor(i * ratio);
+
+        const end = Math.min(
+            Math.floor((i + 1) * ratio),
+            input.length
+        );
+
+        let sum = 0;
+
+        let count = 0;
+
+        for (let j = start; j < end; j++) {
+
+            sum += input[j];
+
+            count++;
         }
 
-        if (!Number.isFinite(duration) || duration < 0) {
-            correctionStatus.textContent =
-                "Enter a valid speech duration.";
-            return;
-        }
+        let sample = count > 0
+            ? sum / count
+            : 0;
 
-        if (!currentOrder) {
-            correctionStatus.textContent =
-                "Please place an order first.";
-            return;
-        }
+        sample = Math.max(-1, Math.min(1, sample));
 
-        correctionButton.disabled = true;
-        correctionStatus.textContent = "Processing customer response...";
-        errorText.textContent = "";
+        const pcmValue = sample < 0
+            ? sample * 32768
+            : sample * 32767;
 
-        // Pause the current confirmation.
-        audioPlayer.pause();
+        view.setInt16(
+            i * 2,
+            Math.round(pcmValue),
+            true
+        );
+    }
 
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/order/correct`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        transcript,
-                        duration_seconds: duration,
-                        current_order: currentOrder
-                    })
-                }
+    return outputBuffer;
+}
+
+
+// ==========================================
+// TRANSCRIBE NEW ORDER
+// ==========================================
+
+async function transcribeRecording(pcmAudio) {
+
+    startRecordingButton.disabled = true;
+
+    stopRecordingButton.disabled = true;
+
+    recordingStatus.textContent =
+        "Sending audio to Gnani Prisma...";
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE_URL}/api/voice-order`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/octet-stream",
+                    "X-Audio-Sample-Rate": "16000"
+                },
+
+                body: pcmAudio
+            }
+        );
+
+        const data = await readResponse(response);
+
+        if (!data.transcript) {
+
+            throw new Error(
+                "Prisma returned an empty transcript."
             );
+        }
 
-            const data = await readResponse(response);
+        recordingStatus.textContent =
+            "Transcription successful!";
 
-            // ----------------------------------
-            // BACKCHANNEL: Continue old audio.
-            // ----------------------------------
+        displayOrderResponse(data);
 
-            if (data.action === "continue") {
-                correctionStatus.textContent =
-                    "Acknowledgement detected. Continuing confirmation.";
+    } catch (error) {
 
-                audioPlayer.play().catch(() => {});
-                correctionTranscript.value = "";
-                return;
+        recordingStatus.textContent =
+            "Transcription failed.";
+
+        errorText.textContent = error.message;
+
+    } finally {
+
+        startRecordingButton.disabled = false;
+
+        stopRecordingButton.disabled = true;
+
+        startCorrectionRecordingButton.disabled = false;
+    }
+}
+
+
+// ==========================================
+// TRANSCRIBE CUSTOMER CORRECTION
+// ==========================================
+
+async function transcribeCorrectionRecording(pcmAudio) {
+
+    startCorrectionRecordingButton.disabled = true;
+
+    stopCorrectionRecordingButton.disabled = true;
+
+    correctionRecordingStatus.textContent =
+        "Sending correction to Gnani Prisma...";
+
+    correctionStatus.textContent =
+        "Transcribing customer correction...";
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE_URL}/api/transcribe`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/octet-stream",
+                    "X-Audio-Sample-Rate": "16000"
+                },
+
+                body: pcmAudio
             }
+        );
 
-            // Update the order if the server returned one.
-            if (data.order) {
-                currentOrder = data.order;
-                renderOrder(currentOrder);
+        const data = await readResponse(response);
+
+        if (!data.transcript) {
+
+            throw new Error(
+                "Prisma returned an empty correction transcript."
+            );
+        }
+
+        correctionTranscript.value = data.transcript;
+
+        correctionRecordingStatus.textContent =
+            "Correction transcribed successfully!";
+
+        correctionStatus.textContent =
+            "Recognized: " + data.transcript;
+
+        await processCorrection();
+
+    } catch (error) {
+
+        correctionRecordingStatus.textContent =
+            "Correction transcription failed.";
+
+        correctionStatus.textContent =
+            "Error: " + error.message;
+
+    } finally {
+
+        startCorrectionRecordingButton.disabled = false;
+
+        stopCorrectionRecordingButton.disabled = true;
+    }
+}
+
+
+// ==========================================
+// PROCESS CUSTOMER CORRECTION
+// ==========================================
+
+async function processCorrection() {
+
+    const transcript =
+        correctionTranscript.value.trim();
+
+    const duration = Number(speechDuration.value);
+
+    if (!transcript) {
+
+        correctionStatus.textContent =
+            "Please record or enter a correction.";
+
+        return;
+    }
+
+    if (!Number.isFinite(duration) || duration < 0) {
+
+        correctionStatus.textContent =
+            "Invalid speech duration.";
+
+        return;
+    }
+
+    if (!currentOrder) {
+
+        correctionStatus.textContent =
+            "Please place an order first.";
+
+        return;
+    }
+
+    correctionButton.disabled = true;
+
+    startCorrectionRecordingButton.disabled = true;
+
+    correctionStatus.textContent =
+        "Updating the existing order...";
+
+    audioPlayer.pause();
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE_URL}/api/order/correct`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    transcript,
+                    duration_seconds: duration,
+                    current_order: currentOrder
+                })
             }
+        );
 
-            // ----------------------------------
-            // UNCLEAR SPEECH: Ask again.
-            // ----------------------------------
+        const data = await readResponse(response);
 
-            if (data.action === "ask_again") {
-                confirmationText.textContent = data.confirmation_text || "";
-                confirmationCard.classList.remove("hidden");
+        // BACKCHANNEL
+        if (data.action === "continue") {
 
-                if (data.audio_base64) {
-                    setAudioFromBase64(data.audio_base64, true);
-                } else {
-                    clearAudio();
-                }
+            correctionStatus.textContent =
+                "Acknowledgement detected. Continuing confirmation.";
 
-                correctionStatus.textContent =
-                    "Speech was unclear. Please ask the customer to repeat.";
-
-                correctionTranscript.value = "";
-                return;
-            }
-
-            // ----------------------------------
-            // PARSER NEEDS CLARIFICATION.
-            // ----------------------------------
-
-            if (data.order && data.order.needs_clarification) {
-                confirmationText.textContent = data.confirmation_text || "";
-                confirmationCard.classList.remove("hidden");
-
-                if (data.audio_base64) {
-                    setAudioFromBase64(data.audio_base64, true);
-                } else {
-                    clearAudio();
-                }
-
-                correctionStatus.textContent =
-                    "More information is needed. Please answer the clarification question.";
-
-                correctionTranscript.value = "";
-                return;
-            }
-
-            // ----------------------------------
-            // SUCCESSFUL CORRECTION.
-            // ----------------------------------
-
-            confirmationText.textContent =
-                data.confirmation_text || "Order updated.";
-
-            confirmationCard.classList.remove("hidden");
-
-            if (data.audio_base64) {
-                setAudioFromBase64(data.audio_base64, true);
-
-                correctionStatus.textContent =
-                    "Order corrected! Playing updated confirmation.";
-            } else {
-                clearAudio();
-
-                correctionStatus.textContent =
-                    "Order updated, but the server returned no audio.";
-            }
+            audioPlayer.play().catch(() => {});
 
             correctionTranscript.value = "";
 
-        } catch (error) {
+            return;
+        }
+
+        if (data.order) {
+
+            currentOrder = data.order;
+
+            renderOrder(currentOrder);
+        }
+
+        // UNCLEAR SPEECH
+        if (data.action === "ask_again") {
+
+            confirmationText.textContent =
+                data.confirmation_text || "";
+
+            confirmationCard.classList.remove("hidden");
+
+            if (data.audio_base64) {
+
+                setAudioFromBase64(data.audio_base64, true);
+
+            } else {
+
+                clearAudio();
+            }
+
             correctionStatus.textContent =
-                "Correction failed: " + error.message;
+                "Speech was unclear. Please repeat.";
 
-        } finally {
-            correctionButton.disabled = false;
+            correctionTranscript.value = "";
+
+            return;
         }
+
+        // CLARIFICATION REQUIRED
+        if (data.order && data.order.needs_clarification) {
+
+            confirmationText.textContent =
+                data.confirmation_text || "";
+
+            confirmationCard.classList.remove("hidden");
+
+            if (data.audio_base64) {
+
+                setAudioFromBase64(data.audio_base64, true);
+
+            } else {
+
+                clearAudio();
+            }
+
+            correctionStatus.textContent =
+                "More information is needed.";
+
+            correctionTranscript.value = "";
+
+            return;
+        }
+
+        // SUCCESSFUL CORRECTION
+        confirmationText.textContent =
+            data.confirmation_text || "Order updated.";
+
+        confirmationCard.classList.remove("hidden");
+
+        if (data.audio_base64) {
+
+            setAudioFromBase64(data.audio_base64, true);
+
+            correctionStatus.textContent =
+                "Order corrected. Playing updated confirmation.";
+
+        } else {
+
+            clearAudio();
+
+            correctionStatus.textContent =
+                "Order updated, but no audio was returned.";
+        }
+
+        correctionTranscript.value = "";
+
+    } catch (error) {
+
+        correctionStatus.textContent =
+            "Correction failed: " + error.message;
+
+    } finally {
+
+        correctionButton.disabled = false;
+
+        startCorrectionRecordingButton.disabled = false;
     }
+}
 
 
-    // ==========================================
-    // RENDER ORDER
-    // ==========================================
+// ==========================================
+// PAGE CLEANUP
+// ==========================================
 
-    function renderOrder(order) {
-        orderItems.replaceChildren();
+window.addEventListener("beforeunload", () => {
 
-        orderBadge.textContent = order.needs_clarification
-            ? "Needs Clarification"
-            : "Order Parsed";
+    cleanupMicrophone();
 
-        for (const item of (order.items || [])) {
-            const row = document.createElement("li");
+    clearAudio();
+});
 
-            const name = document.createElement("span");
-            const quantity = document.createElement("span");
-
-            name.textContent = item.name;
-            quantity.textContent = `${item.quantity} ${item.unit}`;
-            quantity.className = "quantity";
-
-            row.append(name, quantity);
-            orderItems.appendChild(row);
-        }
-
-        if (!order.items || order.items.length === 0) {
-            const row = document.createElement("li");
-            row.textContent = "No items in the order.";
-            orderItems.appendChild(row);
-        }
-
-        orderCard.classList.remove("hidden");
-    }
 </script>
+
 </body>
 </html>
+
+
