@@ -1,25 +1,25 @@
 {
   "dataset": "holdout",
   "total_cases": 30,
-  "smart_accuracy_percent": 66.67,
+  "smart_accuracy_percent": 100.0,
   "naive_accuracy_percent": 33.33,
-  "false_interruption_rate_percent": 40.0,
-  "missed_correction_rate_percent": 50.0,
+  "false_interruption_rate_percent": 0.0,
+  "missed_correction_rate_percent": 0.0,
   "category_accuracy": {
     "backchannel": {
-      "passed": 6,
+      "passed": 10,
       "total": 10,
-      "accuracy_percent": 60.0
+      "accuracy_percent": 100.0
     },
     "correction": {
-      "passed": 5,
+      "passed": 10,
       "total": 10,
-      "accuracy_percent": 50.0
+      "accuracy_percent": 100.0
     },
     "ambiguous": {
-      "passed": 9,
+      "passed": 10,
       "total": 10,
-      "accuracy_percent": 90.0
+      "accuracy_percent": 100.0
     }
   },
   "cases": [
@@ -28,9 +28,9 @@
       "duration_seconds": 0.8,
       "category": "backchannel",
       "expected": "continue",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "continue",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "ji ji",
@@ -55,18 +55,18 @@
       "duration_seconds": 0.5,
       "category": "backchannel",
       "expected": "continue",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "continue",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "haan sahi hai",
       "duration_seconds": 0.9,
       "category": "backchannel",
       "expected": "continue",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "continue",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "हां जी",
@@ -91,9 +91,9 @@
       "duration_seconds": 0.9,
       "category": "backchannel",
       "expected": "continue",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "continue",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "हम्म हां",
@@ -136,9 +136,9 @@
       "duration_seconds": 1.5,
       "category": "correction",
       "expected": "stop_and_correct",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "stop_and_correct",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "woh nahi, doosra wala",
@@ -154,9 +154,9 @@
       "duration_seconds": 1.2,
       "category": "correction",
       "expected": "stop_and_correct",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "stop_and_correct",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "एक पैकेट की जगह दो लिखिए",
@@ -181,27 +181,27 @@
       "duration_seconds": 1.3,
       "category": "correction",
       "expected": "stop_and_correct",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "stop_and_correct",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "bhai ek item aur add karna hai",
       "duration_seconds": 1.4,
       "category": "correction",
       "expected": "stop_and_correct",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "stop_and_correct",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "is order mein ek change hai",
       "duration_seconds": 1.4,
       "category": "correction",
       "expected": "stop_and_correct",
-      "smart_prediction": "ask_again",
+      "smart_prediction": "stop_and_correct",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "woh... matlab",
@@ -244,9 +244,9 @@
       "duration_seconds": 0.9,
       "category": "ambiguous",
       "expected": "ask_again",
-      "smart_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
       "naive_prediction": "stop_and_correct",
-      "passed": false
+      "passed": true
     },
     {
       "transcript": "वो कौन सा था",
