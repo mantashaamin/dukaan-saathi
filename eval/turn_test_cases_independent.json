@@ -1,0 +1,183 @@
+
+[
+  {
+    "transcript": "haan ji bilkul",
+    "duration_seconds": 0.8,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "achha samajh gaya",
+    "duration_seconds": 0.9,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "hmm theek",
+    "duration_seconds": 0.7,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "जी बताइए",
+    "duration_seconds": 0.8,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "sahi hai",
+    "duration_seconds": 0.6,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "haan aage bolo",
+    "duration_seconds": 0.9,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "ठीक ठीक",
+    "duration_seconds": 0.6,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+  "transcript": "अच्छा जी, बोलिए",
+  "duration_seconds": 0.8,
+  "expected": "continue",
+  "category": "backchannel"
+},
+  {
+    "transcript": "accha",
+    "duration_seconds": 0.4,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "haan sun raha hoon",
+    "duration_seconds": 0.9,
+    "expected": "continue",
+    "category": "backchannel"
+  },
+  {
+    "transcript": "nahi bhai, do kilo nahi ek kilo",
+    "duration_seconds": 1.4,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "chini ki jagah gud likho",
+    "duration_seconds": 1.2,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "एक पैकेट और जोड़ दीजिए",
+    "duration_seconds": 1.1,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "दूध वाला आइटम हटा दीजिए",
+    "duration_seconds": 1.2,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+  "transcript": "das ki jagah paanch kar do",
+  "duration_seconds": 1.0,
+  "expected": "stop_and_correct",
+  "category": "correction"
+},
+  {
+    "transcript": "ruk jaiye, ek change hai",
+    "duration_seconds": 1.1,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "तेल दो लीटर की जगह एक लीटर",
+    "duration_seconds": 1.3,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "ek aur bread add karna",
+    "duration_seconds": 1.0,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "नमक मत डालिए",
+    "duration_seconds": 0.8,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "mera order change karna hai",
+    "duration_seconds": 1.1,
+    "expected": "stop_and_correct",
+    "category": "correction"
+  },
+  {
+    "transcript": "kal wala samaan bhi chahiye",
+    "duration_seconds": 1.0,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "woh doosra wala",
+    "duration_seconds": 0.7,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "haan shayad wahi",
+    "duration_seconds": 0.8,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "थोड़ा सा और",
+    "duration_seconds": 0.7,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "jo pehle bola tha",
+    "duration_seconds": 0.9,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "uska rate kitna tha",
+    "duration_seconds": 0.9,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "nahi matlab woh nahi",
+    "duration_seconds": 0.8,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "कुछ और चाहिए शायद",
+    "duration_seconds": 0.9,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "doosra packet ya pehla packet",
+    "duration_seconds": 1.0,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  },
+  {
+    "transcript": "ek minute, sochne do",
+    "duration_seconds": 0.9,
+    "expected": "ask_again",
+    "category": "ambiguous"
+  }
+]
