@@ -25,6 +25,9 @@ HINDI_BACKCHANNEL_MAP = {
     "बिल्कुल": "bilkul",
     "बिलकुल": "bilkul",
     "सही है": "sahi hai",
+    "ठीक ठीक": "theek theek",
+    "बोलिए": "boliye",
+    "बताइए": "bataiye",
 }
 
 # Hindi corrections and interruption phrases.
@@ -75,6 +78,8 @@ HINDI_INTERRUPTION_MAP = {
     "चीनी": "cheeni",
     "चिनी": "chini",
     "मुझे याद नहीं आ रहा": "mujhe yaad nahi aa raha",
+    "रुक जाइए": "ruko",
+    "रुक जाइये": "ruko",
 }
 
 # Romanized spelling variations -> canonical forms.
@@ -104,6 +109,15 @@ BACKCHANNEL_TOKENS = {
     "bilkul",
     "sahi",
 }
+# Approved conversational acknowledgements.
+BACKCHANNEL_PHRASES = {
+    "acha samajh gaya",
+    "ji bataiye",
+    "haan aage bolo",
+    "theek theek",
+    "acha ji boliye",
+    "haan sun raha hoon",
+}
 
 AMBIGUOUS_PHRASES = {
     "pata nahi",
@@ -117,6 +131,9 @@ AMBIGUOUS_PHRASES = {
     "woh kaun sa tha",
     "umm kaunsa item tha",
     "i am not sure",
+    "nahi matlab woh nahi",
+    "ek minute sochne do",
+    "sochne do",
 }
 
 # Extra contextual correction phrases.
@@ -138,6 +155,10 @@ CONTEXTUAL_CORRECTION_PHRASES = {
     "tel nahi chahiye",
     "chini mat daliye",
     "cheeni mat daliye",
+    "ruk jaiye",
+    "ek change hai",
+    "ek aur bread add karna",
+    "mera order change karna hai",
 }
 
 
@@ -231,12 +252,15 @@ def extract_features(
     words = re.findall(r"\b[\w]+\b", text)
 
     is_backchannel = (
-        bool(words)
-        and all(
+    bool(words)
+    and (
+        all(
             word in BACKCHANNEL_TOKENS
             for word in words
         )
+        or text in BACKCHANNEL_PHRASES
     )
+)
 
     is_ambiguous = _contains_phrase(
         text,
