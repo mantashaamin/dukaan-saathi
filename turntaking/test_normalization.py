@@ -39,12 +39,24 @@ def test_transcript_normalization(original, expected):
         ("ठीक है", "continue"),
         ("haan bilkul", "continue"),
         ("haan sahi hai", "continue"),
+
+        # New conversational backchannel cases
+        ("achha samajh gaya", "continue"),
+        ("जी बताइए", "continue"),
+        ("haan aage bolo", "continue"),
+        ("ठीक ठीक", "continue"),
+        ("अच्छा जी, बोलिए", "continue"),
+        ("haan sun raha hoon", "continue"),
+
+        # Existing correction cases
         ("रुको ज़रा", "stop_and_correct"),
         ("एक मिनट", "stop_and_correct"),
         ("चीनी मत डालिए", "stop_and_correct"),
         ("quantity aadhi kar do", "stop_and_correct"),
         ("bhai ek item aur add karna hai", "stop_and_correct"),
         ("is order mein ek change hai", "stop_and_correct"),
+
+        # Ambiguous cases
         ("मुझे नहीं पता", "ask_again"),
         ("मुझे याद नहीं आ रहा", "ask_again"),
         ("pata nahi", "ask_again"),
