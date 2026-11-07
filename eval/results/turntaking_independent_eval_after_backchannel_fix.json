@@ -1,0 +1,298 @@
+{
+  "total_cases": 30,
+  "naive_accuracy_percent": 33.33,
+  "smart_accuracy_percent": 83.33,
+  "naive_false_interruption_rate_percent": 100.0,
+  "smart_false_interruption_rate_percent": 0.0,
+  "naive_missed_correction_rate_percent": 0.0,
+  "smart_missed_correction_rate_percent": 30.0,
+  "category_accuracy": {
+    "backchannel": {
+      "passed": 10,
+      "total": 10,
+      "accuracy_percent": 100.0
+    },
+    "correction": {
+      "passed": 7,
+      "total": 10,
+      "accuracy_percent": 70.0
+    },
+    "ambiguous": {
+      "passed": 8,
+      "total": 10,
+      "accuracy_percent": 80.0
+    }
+  },
+  "cases": [
+    {
+      "transcript": "haan ji bilkul",
+      "duration_seconds": 0.8,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "achha samajh gaya",
+      "duration_seconds": 0.9,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "hmm theek",
+      "duration_seconds": 0.7,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "जी बताइए",
+      "duration_seconds": 0.8,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "sahi hai",
+      "duration_seconds": 0.6,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "haan aage bolo",
+      "duration_seconds": 0.9,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ठीक ठीक",
+      "duration_seconds": 0.6,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "अच्छा जी, बोलिए",
+      "duration_seconds": 0.8,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "accha",
+      "duration_seconds": 0.4,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "haan sun raha hoon",
+      "duration_seconds": 0.9,
+      "category": "backchannel",
+      "expected": "continue",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "continue",
+      "smart_passed": true
+    },
+    {
+      "transcript": "nahi bhai, do kilo nahi ek kilo",
+      "duration_seconds": 1.4,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "chini ki jagah gud likho",
+      "duration_seconds": 1.2,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "एक पैकेट और जोड़ दीजिए",
+      "duration_seconds": 1.1,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "दूध वाला आइटम हटा दीजिए",
+      "duration_seconds": 1.2,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "das ki jagah paanch kar do",
+      "duration_seconds": 1.0,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ruk jaiye, ek change hai",
+      "duration_seconds": 1.1,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": false
+    },
+    {
+      "transcript": "तेल दो लीटर की जगह एक लीटर",
+      "duration_seconds": 1.3,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ek aur bread add karna",
+      "duration_seconds": 1.0,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": false
+    },
+    {
+      "transcript": "नमक मत डालिए",
+      "duration_seconds": 0.8,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": true
+    },
+    {
+      "transcript": "mera order change karna hai",
+      "duration_seconds": 1.1,
+      "category": "correction",
+      "expected": "stop_and_correct",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": false
+    },
+    {
+      "transcript": "kal wala samaan bhi chahiye",
+      "duration_seconds": 1.0,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "woh doosra wala",
+      "duration_seconds": 0.7,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "haan shayad wahi",
+      "duration_seconds": 0.8,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "थोड़ा सा और",
+      "duration_seconds": 0.7,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "jo pehle bola tha",
+      "duration_seconds": 0.9,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "uska rate kitna tha",
+      "duration_seconds": 0.9,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "nahi matlab woh nahi",
+      "duration_seconds": 0.8,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": false
+    },
+    {
+      "transcript": "कुछ और चाहिए शायद",
+      "duration_seconds": 0.9,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "doosra packet ya pehla packet",
+      "duration_seconds": 1.0,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "ask_again",
+      "smart_passed": true
+    },
+    {
+      "transcript": "ek minute, sochne do",
+      "duration_seconds": 0.9,
+      "category": "ambiguous",
+      "expected": "ask_again",
+      "naive_prediction": "stop_and_correct",
+      "smart_prediction": "stop_and_correct",
+      "smart_passed": false
+    }
+  ]
+}
