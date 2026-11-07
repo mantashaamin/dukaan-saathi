@@ -1,456 +1,307 @@
-# Dukaan Saathi — System Design and Technical Decisions
+# Dukaan Saathi — System Design
 
-## 1. Project Overview
+## 1. Design Goals
 
-Dukaan Saathi is an AI-powered voice assistant designed for Indian kirana stores. It allows shopkeepers to place grocery orders naturally using Hindi and Hinglish.
+The system was designed around five primary goals:
 
-The system converts spoken requests into structured grocery orders, validates the extracted information, and provides spoken confirmations.
+1. Make grocery ordering accessible through Hindi and Hinglish.
+2. Convert informal requests into structured and validated order data.
+3. Support corrections without losing the existing order context.
+4. Generate natural spoken confirmations.
+5. Distinguish acknowledgements from corrections and unclear responses.
 
-A key technical challenge is conversational turn-taking: distinguishing between a customer's acknowledgement and an actual correction while an order is being read back.
+## 2. Architecture
 
-The project uses Gnani AI's Prisma Speech-to-Text and Timbre Text-to-Speech services alongside an LLM-based order parser.
+The application uses a browser-based frontend connected to a FastAPI backend.
 
----
-
-## 2. System Architecture
-
-The application follows a client-server architecture.
-
-### High-level workflow
-
-1. The browser captures the user's voice through the microphone.
-2. Audio is sent to the FastAPI backend.
-3. Gnani Prisma converts speech into text.
-4. The transcript is passed to the LLM-based order parser.
-5. The parser extracts product names, quantities and units.
-6. Pydantic validates the structured output.
-7. The frontend displays the order.
-8. Gnani Timbre generates a spoken confirmation.
-9. If the user wants to correct an order, the correction is transcribed and processed using the existing order context.
-10. The updated order is returned with a new spoken confirmation.
-
-### Architecture diagram
+### Component flow
 
 ```text
-          Shopkeeper
-              |
-              v
-       Browser Interface
-        (Microphone)
-              |
-              v
-         FastAPI Backend
-              |
-              v
-        Gnani Prisma STT
-              |
-              v
-        Speech Transcript
-              |
-              v
-        LLM Order Parser
-              |
-              v
-       Pydantic Validation
-              |
-              v
-       Structured Order
-              |
-        +-----+------+
-        |            |
-        v            v
-   Order Preview   Gnani Timbre
-                   Text-to-Speech
-                        |
-                        v
-                 Voice Confirmation
-                        |
-                        v
-                 User Correction
-                        |
-                        v
-                 Correction API
-                        |
-                        v
-              Context-aware Parsing
-                        |
-                        v
-                 Updated Order
+                 CUSTOMER
+                    |
+                    v
+          Browser Interface
+          /               \
+    Microphone          Typed Input
+         |                  |
+         v                  |
+    Audio Processing        |
+    Mono PCM, 16 kHz        |
+         |                  |
+         v                  v
+            FastAPI Backend
+                    |
+          +---------+----------+
+          |                    |
+          v                    v
+      Gnani Prisma         Text Transcript
+          |                    |
+          +---------+----------+
+                    |
+                    v
+             LLM Order Parser
+               Groq API
+                    |
+                    v
+            Pydantic Validation
+                    |
+          +---------+----------+
+          |                    |
+          v                    v
+    Order Confirmation    Clarification
+          |                    |
+          +---------+----------+
+                    |
+                    v
+               Gnani Timbre
+                    |
+                    v
+             Browser Audio
+                    |
+                    v
+             Order Preview
 ```
 
----
+## 3. Backend Design
 
-## 3. Technology Choices
+FastAPI coordinates the application components and exposes the HTTP endpoints.
 
-| Component | Technology | Purpose |
-|---|---|---|
-| Backend | Python, FastAPI | API endpoints and application logic |
-| Speech-to-Text | Gnani Prisma | Converts Hindi/Hinglish speech into text |
-| Text-to-Speech | Gnani Timbre | Generates spoken confirmations |
-| Language Model | Groq-hosted LLM | Extracts structured grocery orders |
-| Validation | Pydantic | Validates structured order data |
-| Frontend | HTML, CSS, JavaScript | User interface and microphone interaction |
-| Audio Processing | Web Audio API | Captures and processes microphone audio |
-| Testing | Pytest | Automated testing |
-| Deployment | Render | Hosts the application |
+### Main responsibilities
 
-The backend handles API credentials and external service requests. Sensitive API keys are stored in environment variables rather than exposed to browser-side JavaScript.
+- Accept voice and text requests.
+- Validate audio format and request payloads.
+- Invoke Prisma transcription.
+- Pass transcripts to the order parser.
+- Validate structured model output.
+- Preserve conversation state during corrections.
+- Generate confirmation audio through Timbre.
+- Return structured responses to the frontend.
 
----
+## 4. Audio Processing Design
 
-## 4. Order Parsing Design
+The browser microphone workflow prepares audio in a consistent format before sending it to the backend.
 
-### Objective
+**Expected audio format:**
 
-Convert natural Hindi and Hinglish grocery-order requests into structured data that can be processed by the application.
+| Property | Value |
+|---|---|
+| Channels | Mono |
+| Sample rate | 16,000 Hz |
+| Encoding | Signed 16-bit PCM |
 
-### Example input
+The backend validates the sample rate and checks the audio payload before transcription.
+
+The transcription-only endpoint is separated from new-order processing so that correction speech can be transcribed without resetting the existing conversation state.
+
+## 5. Order Parser Design
+
+The order parser uses an LLM to convert conversational requests into structured data.
+
+### Input
+
+A Hindi/Hinglish transcript.
+
+### Processing
+
+1. Identify product references.
+2. Extract quantities.
+3. Extract units.
+4. Normalize quantity and unit expressions.
+5. Identify corrections or cancellations.
+6. Determine whether clarification is necessary.
+7. Return structured output.
+
+### Validation
+
+Pydantic checks the resulting structure before it is used by the application.
+
+The parser is evaluated against a 40-case synthetic dataset.
+
+## 6. Contextual Correction Design
+
+A correction must be applied to the existing order rather than starting a new order.
+
+### Correction workflow
 
 ```text
-Do kilo chawal, ek packet namak aur paanch Parle-G de do.
+Existing Order
+      |
+      v
+Customer Gives Correction
+      |
+      v
+Transcribe Correction
+      |
+      v
+Pass Existing Order Context
+      |
+      v
+LLM Correction Parsing
+      |
+      v
+Validate Updated Order
+      |
+      v
+Generate Updated Confirmation
+      |
+      v
+Play Confirmation Audio
 ```
 
-### Expected structured output
+The correction workflow supports a separate microphone control and a typed fallback.
 
-```json
-{
-  "items": [
-    {
-      "name": "chawal",
-      "quantity": 2,
-      "unit": "kg"
-    },
-    {
-      "name": "namak",
-      "quantity": 1,
-      "unit": "packet"
-    },
-    {
-      "name": "Parle-G",
-      "quantity": 5,
-      "unit": "packet"
-    }
-  ]
-}
-```
+This keeps correction processing separate from initial order creation.
 
-### Design decisions
+## 7. Turn-Taking Engine Design
 
-- The LLM interprets natural-language grocery requests.
-- Product names, quantities and units are extracted into structured fields.
-- Pydantic validates the returned data.
-- Common unit variations are normalized.
-- Repeated product entries are handled during evaluation.
-- Ambiguous requests can be flagged for clarification.
-- Corrections are applied to the existing order instead of treating every correction as an entirely new order.
+The turn-taking engine addresses a common voice-assistant problem: not every user utterance during a spoken response is an interruption.
 
-### Reliability
+For example:
 
-The parser was evaluated against 40 synthetic grocery-order examples. All 40 passed the prepared evaluation.
-
-This result measures performance on the prepared dataset, not guaranteed accuracy on unseen real-world orders.
-
----
-
-## 5. Turn-Taking Engine Design
-
-### Problem
-
-During spoken order confirmation, a customer may respond with:
-
-- An acknowledgement: "Haan haan."
-- A correction: "Ruko, namak nahi."
-- An uncertain response: "Mujhe nahi pata."
-
-A naive voice assistant may stop speaking whenever it detects customer speech. This can unnecessarily interrupt confirmations when the customer is simply acknowledging the order.
-
-Dukaan Saathi uses a rule-based turn-taking engine to distinguish these situations.
+- "Haan haan" is generally an acknowledgement.
+- "Ruko, namak nahi, atta" indicates a correction.
+- "Mujhe nahi pata" may require clarification.
 
 ### Three possible decisions
 
 | Decision | Meaning | Intended action |
 |---|---|---|
-| CONTINUE | Customer acknowledgement | Continue the confirmation |
-| STOP_AND_CORRECT | Customer wants to change something | Process the correction |
-| ASK_AGAIN | Speech is ambiguous or unclear | Request clarification |
+| CONTINUE | Acknowledgement | Preserve the current response |
+| STOP_AND_CORRECT | Correction or interruption | Process the updated instruction |
+| ASK_AGAIN | Unclear response | Ask the customer to repeat |
 
-### Decision flow
-
-```text
-       Customer Transcript
-                |
-                v
-       Transcript Normalization
-                |
-                v
-         Feature Extraction
-                |
-                v
-        Rule-based Classification
-                |
-        +-------+--------+
-        |       |        |
-        v       v        v
-     CONTINUE  STOP    ASK_AGAIN
-        |       |        |
-        v       v        v
-     Continue  Apply   Request
-     Speech   Correction Clarification
-```
-
-### Why rule-based classification?
-
-A rule-based approach was selected because:
-
-- The number of clearly defined conversational categories is small.
-- Common Hindi and Hinglish acknowledgement and correction expressions can be identified using phrase-based rules.
-- The behaviour is interpretable and easy to debug.
-- It avoids introducing an ML model before enough representative labelled audio data is available.
-
-The current turn-taking engine should therefore be described as rule-based, not as a trained machine-learning classifier.
-
----
-
-## 6. Hindi and Hinglish Transcript Normalization
-
-Speech recognition may produce different written forms of the same conversational expression.
-
-For example:
-
-- अच्छा
-- achha
-- accha
-
-These expressions may represent the same acknowledgement.
-
-To handle such variations, the system normalizes transcripts before extracting features.
-
-### Normalization steps
-
-1. Convert text into a consistent case.
-2. Remove unnecessary punctuation and extra whitespace.
-3. Preserve meaningful Devanagari characters and combining marks.
-4. Normalize frequently used Romanized Hindi variants.
-5. Convert supported Hindi expressions into consistent normalized forms.
-
-### Examples
-
-| Original transcript | Normalized transcript |
-|---|---|
-| हाँ | haan |
-| हाँ हाँ | haan haan |
-| अच्छा | acha |
-| achha | acha |
-| accha | acha |
-| ठीक है | theek hai |
-| रुको ज़रा | ruko zara |
-| मुझे नहीं पता | mujhe nahi pata |
-
-A Unicode-aware cleanup approach is used so that Devanagari vowel signs and combining marks are not accidentally removed.
-
----
-
-## 7. Feature Extraction and Classification Rules
-
-The feature extraction module identifies useful characteristics of a transcript before classification.
-
-The current implementation considers:
-
-- Whether the transcript is empty.
-- Whether it resembles a known backchannel.
-- Whether it contains interruption or correction cues.
-- Whether it represents an ambiguous expression.
-- The normalized transcript.
-
-### Backchannel examples
-
-- haan
-- haan haan
-- acha
-- theek hai
-- haan bilkul
-- haan sahi hai
-- haan aage bolo
-- जी बताइए
-
-These expressions generally indicate acknowledgement or willingness to continue.
-
-### Correction examples
-
-- ruko zara
-- ek minute
-- cheeni mat daliye
-- quantity aadhi kar do
-- ek item aur add karna hai
-- is order mein ek change hai
-
-These expressions indicate a possible change to the current order.
-
-### Ambiguous examples
-
-- mujhe nahi pata
-- pata nahi
-- mujhe yaad nahi aa raha
-- ek minute, sochne do
-
-These expressions require contextual handling because they do not necessarily represent a direct order correction.
-
-### Important design consideration
-
-The classification rules must avoid treating every occurrence of words such as "nahi" or "minute" as a correction.
-
-For example:
-
-- "Cheeni mat daliye" is a correction.
-- "Mujhe nahi pata" is ambiguous.
-- "Ek minute, sochne do" is a request for time to think.
-
-The rules therefore consider phrases and contextual exceptions rather than relying exclusively on individual keywords.
-
----
-
-## 8. Context-aware Order Corrections
-
-A correction should modify the existing order instead of creating an unrelated new order.
-
-### Example
-
-Original order:
+### Classification pipeline
 
 ```text
-Do kilo chawal aur ek packet namak.
+Customer Transcript
+        |
+        v
+Text Normalization
+        |
+        v
+Feature Extraction
+        |
+        v
+Rule-Based Classification
+        |
+        +-------------------+
+        |         |         |
+        v         v         v
+     CONTINUE   STOP       ASK_AGAIN
+                AND
+              CORRECT
 ```
 
-Customer correction:
+### Feature and rule design
 
-```text
-Namak nahi, cheeni kar do.
-```
+The implementation uses:
 
-Expected updated order:
+- Devanagari and Romanized Hindi/Hinglish normalization.
+- Backchannel phrase recognition.
+- Explicit interruption and correction cues.
+- Contextual phrase matching.
+- Speech-duration information.
+- A conservative fallback for ambiguous responses.
 
-```json
-{
-  "items": [
-    {
-      "name": "chawal",
-      "quantity": 2,
-      "unit": "kg"
-    },
-    {
-      "name": "cheeni",
-      "quantity": 1,
-      "unit": "packet"
-    }
-  ]
-}
-```
+The implementation is rule-based. It should not be described as a trained machine-learning classifier.
 
-### Correction workflow
+## 8. Conversation State Management
 
-1. Receive the correction transcript.
-2. Retrieve the existing order context.
-3. Pass the transcript and existing order to the correction parser.
-4. Generate the updated structured order.
-5. Validate the updated order.
-6. Return the updated order to the frontend.
-7. Generate a new spoken confirmation through Timbre.
+The backend uses a turn-taking state machine to track the interaction.
 
-This preserves the relationship between the original order and the customer's correction.
+The relevant states include:
 
----
+- IDLE — waiting for a new interaction.
+- LISTENING — waiting for a customer response.
+- SPEAKING — assistant confirmation is being generated or delivered.
+- CORRECTING — applying an order correction.
+- CONFIRMED — order confirmation completed.
+
+The turn-taking engine is integrated with the backend correction workflow.
+
+**Implementation boundary:** The application does not currently implement continuous voice activity detection that automatically detects interruptions and ducks the assistant's audio in real time. The correction microphone is user-triggered.
 
 ## 9. API Design
 
-The FastAPI backend exposes the following main endpoints:
-
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/health` | GET | Health check |
-| `/api/order` | POST | Process an order transcript |
-| `/api/voice-order` | POST | Process a voice order |
-| `/api/transcribe` | POST | Transcribe correction audio |
-| `/api/order/correct` | POST | Apply a correction to an existing order |
-
-The correction workflow separates transcription from correction processing. This allows the application to transcribe a correction and then pass the resulting text to the order correction logic.
-
----
-
-## 10. Testing Strategy
-
-The project uses automated unit tests and synthetic evaluation datasets.
-
-### Automated tests
-
-Pytest is used to test:
-
-- Transcript normalization.
-- Hindi and Romanized Hindi variants.
-- Backchannel recognition.
-- Correction recognition.
-- Ambiguous transcript handling.
-- Empty transcript handling.
-- Turn-taking classification.
-
-### Evaluation datasets
-
-Separate datasets are used for different evaluation purposes:
-
-| Dataset | Purpose |
+| Endpoint | Responsibility |
 |---|---|
-| Order parser dataset | Evaluate structured grocery-order extraction |
-| Turn-taking development dataset | Develop and refine classification rules |
-| Original holdout dataset | Preserve an earlier generalization baseline |
-| Independent evaluation dataset | Examine behaviour on additional unseen-style examples |
-| Audio datasets | Planned evaluation using real speech recordings |
+| `GET /health` | Verify backend availability |
+| `POST /api/order` | Create a new order from text |
+| `POST /api/voice-order` | Process a voice order |
+| `POST /api/transcribe` | Transcribe audio without resetting order state |
+| `POST /api/order/correct` | Apply a correction to an existing order |
 
-Results from development datasets must not be presented as independent generalization performance.
+The separation between transcription and order creation is intentional: correction audio should not accidentally create a new order.
 
----
+## 10. Design Decisions
 
-## 11. Current Implementation Status
+### Why FastAPI?
 
-### Implemented
+FastAPI provides a lightweight asynchronous backend and clear API contracts for the browser interface.
 
-- FastAPI backend.
-- Browser microphone capture.
-- Gnani Prisma speech transcription.
-- LLM-based grocery-order extraction.
-- Pydantic order validation.
-- Gnani Timbre spoken confirmation.
-- Context-aware order corrections.
-- Hindi and Hinglish transcript normalization.
-- Rule-based turn-taking classification.
-- Automated pytest coverage.
-- Render deployment.
+### Why an LLM-based parser?
 
-### Not yet implemented
+Natural grocery requests contain variations in wording, product names, quantities and corrections. An LLM can interpret these expressions and return structured data.
 
-- Continuous automatic interruption detection during assistant playback.
-- Automatic real-time audio ducking.
-- A complete streaming speech turn-taking loop.
-- A trained ML-based turn-taking classifier.
+### Why Pydantic?
 
-The current correction workflow uses a separate user-triggered correction microphone. It should not be described as continuous automatic interruption detection.
+LLM responses must be validated before being treated as application data. Pydantic provides a clear schema-validation layer.
 
----
+### Why separate correction handling?
 
-## 12. Future Improvements
+A correction modifies an existing order. Treating it as a new order risks losing previously selected items and quantities.
 
-1. Evaluate the turn-taking engine using real Hindi and Hinglish speech recordings.
-2. Introduce different speakers, speaking styles and background noise into audio evaluation.
-3. Measure transcription errors and their effect on classification.
-4. Improve contextual handling of short and ambiguous conversational expressions.
-5. Explore automatic speech activity detection and real-time audio ducking.
-6. Investigate a lightweight ML classifier if sufficient representative labelled data becomes available.
-7. Improve order parsing for product aliases, regional expressions and complex quantity corrections.
+### Why a rule-based turn-taking classifier?
 
----
+A compact rule-based implementation was chosen because its decisions can be inspected, tested and explained. It also allows targeted handling of common Hindi/Hinglish conversational phrases.
 
-## 13. Key Design Principle
+### Why separate transcription from order parsing?
 
-Dukaan Saathi is designed around a simple but important principle:
+Transcription and order interpretation are distinct responsibilities. Keeping them separate makes the API easier to test and prevents correction transcription from resetting conversation state.
 
-**A voice assistant should understand not only what a customer says, but also whether the customer is agreeing, correcting, or asking for clarification.**
+## 11. Reliability and Error Handling
 
-Reliable order extraction, contextual corrections and conversational turn-taking are therefore treated as connected parts of the same grocery-ordering experience.
+The backend checks:
+
+- Missing API credentials.
+- Empty audio payloads.
+- Incorrect sample rates.
+- Invalid PCM payload sizes.
+- Oversized recordings.
+- Transcription failures.
+- Empty or unclear transcripts.
+- Invalid order data.
+- Invalid conversation-state transitions.
+
+Errors are returned through HTTP responses rather than silently generating an order from invalid input.
+
+## 12. Testing Strategy
+
+The project uses several independent evaluation layers:
+
+1. Synthetic order parser evaluation.
+2. Synthetic turn-taking development evaluation.
+3. Initial turn-taking holdout evaluation.
+4. Regression testing after rule improvements.
+5. IndicVoices audio transcription evaluation.
+6. Automated pytest tests.
+7. Manual testing of the deployed voice-order and correction workflow.
+
+The datasets and results are maintained separately so that development performance is not confused with independent evaluation.
+
+## 13. Known Design Limitations
+
+- Rule-based turn-taking depends on the phrase coverage and normalization rules.
+- Synthetic text tests cannot fully reproduce natural conversational behaviour.
+- Prisma recognition varies across short utterances and different speakers.
+- The current correction interaction is user-triggered rather than continuously detected.
+- Automatic audio ducking and interruption detection remain future work.
+
+## 14. Future Design Improvements
+
+- Expand the independent Hindi/Hinglish test corpus.
+- Evaluate more accents, speakers and background conditions.
+- Improve recognition of short acknowledgements.
+- Explore continuous voice activity detection.
+- Add automatic interruption handling and audio ducking.
+- Evaluate the complete workflow with more real-world recordings.

@@ -2,670 +2,265 @@
 
 ## 1. Project Overview
 
-**Dukaan Saathi** is an AI-powered voice assistant designed to simplify grocery ordering at local Indian kirana stores through natural Hindi and Hinglish conversations.
+**Dukaan Saathi** is an AI-powered voice assistant designed to make grocery ordering easier for local Indian kirana stores.
 
-The project aims to make ordering more accessible for shopkeepers and customers who prefer speaking naturally instead of manually typing product names and quantities.
+It allows users to communicate naturally in Hindi and Hinglish, converts their requests into structured grocery orders, and generates spoken confirmations.
 
-The system converts spoken grocery requests into structured order information, validates the extracted data, generates spoken confirmations and allows customers to make contextual corrections.
+The project was developed as part of the **Great Indian AI Internship Challenge by Gnani AI**.
 
-A key feature is its conversational turn-taking engine, which distinguishes between customer acknowledgements, actual corrections and ambiguous responses.
-
-### Example
-
-A shopkeeper says:
-
-"Bhaiya, ek kilo chawal, do kilo aloo aur 500 gram lehsun."
-
-The system extracts the following structured order:
-
-```json
-{
-  "items": [
-    {
-      "name": "chawal",
-      "quantity": 1,
-      "unit": "kg"
-    },
-    {
-      "name": "aloo",
-      "quantity": 2,
-      "unit": "kg"
-    },
-    {
-      "name": "lehsun",
-      "quantity": 500,
-      "unit": "g"
-    }
-  ]
-}
-```
-
-The assistant then generates a spoken confirmation using Gnani AI Timbre.
-
-### Current Project Status
-
-The project has a deployed voice-ordering workflow that supports:
-
-- Browser-based microphone recording.
-- Hindi and Hinglish speech transcription through Gnani Prisma.
-- LLM-based structured grocery-order extraction.
-- Pydantic data validation.
-- Order previews.
-- Spoken Hindi confirmations through Gnani Timbre.
-- Contextual voice-based order corrections.
-- Rule-based conversational turn-taking classification.
-
-The current microphone workflow uses recorded audio submitted to the backend for transcription. Continuous real-time Prisma streaming has not yet been successfully integrated.
-
----
+**Live Application:** https://dukaan-saathi-q6lu.onrender.com  
+**GitHub Repository:** https://github.com/mantashaamin/dukaan-saathi  
+**API Documentation:** https://dukaan-saathi-q6lu.onrender.com/docs
 
 ## 2. Problem Statement
 
-Local kirana stores frequently receive grocery orders through informal conversations.
+Traditional digital ordering systems often require customers to type product names, quantities and other details manually.
 
-Customers may use:
+For many local grocery stores, customers are more comfortable communicating through natural conversation.
 
-- Hindi, Hinglish or regional expressions.
-- Informal product names.
-- Different quantity formats.
-- Incomplete instructions.
-- Corrections while an order is being confirmed.
+However, conversational orders introduce challenges:
 
-Traditional text-based ordering interfaces can be inconvenient for people who are more comfortable speaking naturally.
+- Informal Hindi and Hinglish expressions.
+- Different ways of expressing quantities.
+- Repeated products and corrections.
+- Incomplete or ambiguous instructions.
+- The need to confirm orders verbally.
 
-Manually interpreting and recording every order can also introduce errors, particularly when customers change quantities or replace products.
+Dukaan Saathi addresses these challenges by combining speech processing, language models, structured validation and speech generation.
 
-**Dukaan Saathi aims to solve this problem by converting natural spoken grocery requests into structured digital orders while supporting conversational corrections and spoken confirmation.**
+## 3. Technology Stack
 
----
-
-## 3. Core Technologies
-
-### 3.1 Gnani Prisma — Speech-to-Text (STT)
-
-Gnani Prisma converts spoken audio into written text.
-
-**Purpose:**
-
-- Transcribe Hindi and Hinglish grocery requests.
-- Provide text that can be processed by the order parser.
-- Support the voice-based ordering workflow.
-
-**Implementation:**
-
-The browser captures microphone audio and sends it to the FastAPI backend. The backend uses Gnani Prisma to obtain the transcript.
-
-**Verified status:**
-
-File-based transcription has been tested successfully. The deployed voice-ordering workflow uses this transcription capability.
-
-Real-time WebSocket streaming remains incomplete and is not claimed as a working feature.
-
-### 3.2 LLM-Based Order Parser
-
-A large language model interprets natural-language grocery requests and converts them into structured order information.
-
-**Implementation:**
-
-The Python module `server/order_parser.py` uses the Groq API with the `openai/gpt-oss-20b` model.
-
-**Responsibilities:**
-
-- Identify product names.
-- Extract quantities and units.
-- Convert Hindi number words into numerical quantities.
-- Normalize common unit variations.
-- Handle product corrections and cancellations.
-- Identify ambiguous requests that need clarification.
-
-**Example:**
-
-Input:
-
-```text
-Do kilo chawal aur aadha kilo chini de do.
-```
-
-Expected interpretation:
-
-```json
-{
-  "items": [
-    {
-      "name": "chawal",
-      "quantity": 2,
-      "unit": "kg"
-    },
-    {
-      "name": "chini",
-      "quantity": 0.5,
-      "unit": "kg"
-    }
-  ]
-}
-```
-
-### 3.3 Pydantic — Data Validation
-
-Pydantic validates the structured response generated by the LLM.
-
-Each order item is expected to contain:
-
-- A product name.
-- A positive quantity.
-- A non-empty unit.
-
-Validation helps prevent malformed responses from being processed by the application.
-
-However, structural validation does not guarantee that the LLM has correctly understood the customer's intention. That is why parser evaluation and contextual correction handling are also important.
-
-### 3.4 Gnani Timbre — Text-to-Speech (TTS)
-
-Gnani Timbre converts written responses into audio.
-
-**Purpose:**
-
-- Generate spoken grocery-order confirmations.
-- Communicate updated orders after corrections.
-- Provide spoken responses instead of relying entirely on text.
-
-**Verified status:**
-
-Hindi confirmation audio has been generated successfully using the `timbre-v2.5` model and tested through browser playback.
-
-### 3.5 FastAPI — Backend
-
-FastAPI connects the frontend with the speech services, order parser, validation layer and correction logic.
-
-It handles:
-
-- Audio uploads.
-- Speech transcription.
-- Order parsing.
-- Structured data validation.
-- Contextual correction requests.
-- Spoken confirmation generation.
-
-### 3.6 HTML, CSS and JavaScript — Frontend
-
-The browser interface provides:
-
-- Microphone recording.
-- Voice-order submission.
-- Structured order previews.
-- Correction recording.
-- Updated order display.
-- Generated audio playback.
-
-The Web Audio API is used for browser-side audio capture and processing.
-
----
+| Technology | Purpose |
+|---|---|
+| Python | Core application logic |
+| FastAPI | Backend API |
+| Groq API | LLM inference |
+| GPT-OSS-20B | Structured order extraction |
+| Gnani Prisma | Speech-to-text |
+| Gnani Timbre | Hindi text-to-speech |
+| Pydantic | Structured data validation |
+| HTML, CSS, JavaScript | Browser interface |
+| Web Audio API | Microphone audio capture and processing |
+| Pytest | Automated testing |
+| Render | Application deployment |
 
 ## 4. System Architecture
 
-The application follows a client-server architecture.
+The application follows a browser-to-backend architecture.
 
-```text
-             Shopkeeper
-                  |
-                  v
-          Browser Interface
-                  |
-             Microphone
-                  |
-                  v
-          FastAPI Backend
-                  |
-                  v
-            Gnani Prisma
-             Speech-to-Text
-                  |
-                  v
-          Hindi/Hinglish Text
-                  |
-                  v
-           Groq LLM Parser
-                  |
-                  v
-          Pydantic Validation
-                  |
-                  v
-           Structured Order
-                  |
-          +-------+-------+
-          |               |
-          v               v
-      Order Preview   Gnani Timbre
-                      Text-to-Speech
-                          |
-                          v
-                  Spoken Confirmation
-                          |
-                          v
-                  Customer Correction
-                          |
-                          v
-                  Correction Workflow
-                          |
-                          v
-                  Updated Structured Order
-                          |
-                          v
-                  New Voice Confirmation
-```
+### Main workflow
 
-The speech transcription and order parsing stages are handled by the backend. The frontend displays the structured order and plays the generated confirmation audio.
+1. The browser captures the customer's voice.
+2. Audio is converted into mono, signed 16-bit PCM at 16 kHz.
+3. The backend sends the audio to Gnani Prisma for transcription.
+4. The resulting Hindi/Hinglish transcript is passed to the LLM order parser.
+5. The parser extracts product names, quantities and units.
+6. Pydantic validates the structured order.
+7. The backend generates a confirmation or clarification message.
+8. Gnani Timbre generates Hindi speech.
+9. The browser displays the structured order and plays the generated response.
 
----
+### Architecture summary
 
-## 5. Current System Workflow
+Browser microphone → FastAPI → Gnani Prisma → LLM parser → Pydantic validation → Gnani Timbre → Browser audio and order preview.
 
-### Step 1: Voice Input
+## 5. Major Components
 
-The shopkeeper opens the web application and records a grocery order using the browser microphone.
+### 5.1 Gnani Prisma — Speech-to-Text
 
-### Step 2: Audio Processing
+Prisma converts customer audio into text.
 
-The browser captures audio, converts it into mono 16 kHz PCM and submits it to the backend.
+The backend supports audio transcription through the `/api/transcribe` and `/api/voice-order` workflows.
 
-### Step 3: Speech Recognition
+Audio is prepared in the expected mono 16 kHz PCM format.
 
-Gnani Prisma converts the recorded speech into a text transcript.
+Transcription quality is dependent on recording duration, clarity and speaker variation.
 
-### Step 4: Order Extraction
+### 5.2 LLM-Based Order Parser
 
-The transcript is passed to the LLM-based order parser.
+The parser is implemented in `server/order_parser.py`.
 
-The parser identifies:
+It uses Groq inference with `openai/gpt-oss-20b` to interpret Hindi/Hinglish requests.
 
-- Product names.
-- Quantities.
-- Units.
-- Possible corrections or unclear instructions.
+Its responsibilities include:
 
-### Step 5: Data Validation
+- Extracting grocery product names.
+- Identifying quantities and units.
+- Understanding Hindi number words.
+- Normalizing common unit variations.
+- Handling corrections and cancellations.
+- Requesting clarification when required.
 
-Pydantic validates the generated structured order.
+Example request:
 
-### Step 6: Order Preview
+"Bhaiya, ek kilo chawal, do kilo aloo aur 500 gram lehsun."
 
-The frontend displays the extracted grocery items and their quantities.
-
-### Step 7: Voice Confirmation
-
-The backend generates a confirmation response and uses Gnani Timbre to convert it into spoken audio.
-
-### Step 8: Contextual Correction
-
-If the shopkeeper wants to modify the order, they can use the separate correction microphone.
-
-The correction is transcribed and automatically sent to the correction endpoint along with the existing order context.
-
-The parser then generates an updated order and a new spoken confirmation.
-
----
-
-## 6. Contextual Order Corrections
-
-One of the important features of Dukaan Saathi is its ability to process corrections without treating every new statement as an entirely unrelated order.
-
-### Example
-
-Original order:
-
-```text
-Do kilo chawal aur ek packet namak.
-```
-
-Customer correction:
-
-```text
-Namak nahi, cheeni kar do.
-```
-
-Expected updated order:
+Example structured output:
 
 ```json
 {
   "items": [
-    {
-      "name": "chawal",
-      "quantity": 2,
-      "unit": "kg"
-    },
-    {
-      "name": "cheeni",
-      "quantity": 1,
-      "unit": "packet"
-    }
-  ]
+    {"name": "chawal", "quantity": 1, "unit": "kg"},
+    {"name": "aloo", "quantity": 2, "unit": "kg"},
+    {"name": "lehsun", "quantity": 500, "unit": "g"}
+  ],
+  "needs_clarification": false,
+  "clarification_question": null
 }
 ```
 
-### Correction Workflow
+### 5.3 Pydantic — Validation
 
-1. The customer records a correction.
-2. The correction audio is submitted for transcription.
-3. Gnani Prisma returns the transcript.
-4. The transcript is sent to `/api/order/correct`.
-5. The existing order context is passed to the correction parser.
-6. The updated order is validated.
-7. The frontend displays the updated order.
-8. Gnani Timbre generates a new spoken confirmation.
+Pydantic validates the LLM response before the application uses it.
 
-This allows the application to preserve the original order context while processing changes.
+It checks the expected structure and required fields, helping prevent malformed model output from being treated as a valid order.
 
----
+### 5.4 Gnani Timbre — Text-to-Speech
 
-## 7. Conversational Turn-Taking Engine
+Timbre converts generated confirmation messages into spoken Hindi audio.
 
-### 7.1 The Problem
+It is used for order read-backs and clarification responses.
 
-A voice assistant should not interrupt its own confirmation every time the customer speaks.
+### 5.5 Contextual Correction System
 
-Consider two situations:
-
-**Situation A — Acknowledgement**
-
-Assistant: "Aapke order mein do kilo chawal hain."
-
-Customer: "Haan haan."
-
-The assistant should continue speaking.
-
-**Situation B — Correction**
-
-Assistant: "Aapke order mein ek packet namak hai."
-
-Customer: "Ruko, namak nahi, cheeni."
-
-The assistant should stop the current confirmation and process the correction.
-
-A naive voice assistant that stops whenever it detects speech cannot distinguish these situations.
-
-### 7.2 Our Solution
-
-Dukaan Saathi implements a rule-based turn-taking classifier with three possible decisions.
-
-| Decision | Meaning |
-|---|---|
-| `CONTINUE` | The customer is acknowledging the assistant. |
-| `STOP_AND_CORRECT` | The customer wants to modify the order. |
-| `ASK_AGAIN` | The customer's response is ambiguous or unclear. |
-
-### 7.3 Transcript Normalization
-
-Hindi and Romanized Hindi can express the same acknowledgement in different written forms.
+Customers may change an order after the initial request.
 
 For example:
 
-- अच्छा
-- achha
-- accha
+"Ek kilo namak nahi, atta kar do."
 
-The normalization module converts supported expressions into consistent forms before classification.
+The correction workflow preserves the existing order context instead of treating the correction as an entirely new order.
 
-It also preserves Devanagari vowel signs and combining marks during Unicode cleanup.
+The application supports a separate correction microphone and a typed correction fallback.
 
-### 7.4 Feature Extraction
+### 5.6 Turn-Taking Engine
 
-The system extracts features such as:
+The turn-taking engine classifies customer responses into three actions:
 
-- Whether the transcript is empty.
-- Whether it contains backchannel expressions.
-- Whether it contains correction phrases.
-- Whether it contains ambiguous expressions.
-- The normalized transcript.
-- Speech duration.
-
-### 7.5 Classification Rules
-
-The rules distinguish between common conversational expressions.
-
-Examples:
-
-| Customer expression | Decision |
+| Action | Meaning |
 |---|---|
-| Haan haan | CONTINUE |
-| Achha samajh gaya | CONTINUE |
-| Haan aage bolo | CONTINUE |
-| Ruko zara | STOP_AND_CORRECT |
-| Ek item aur add karna hai | STOP_AND_CORRECT |
-| Cheeni mat daliye | STOP_AND_CORRECT |
-| Mujhe nahi pata | ASK_AGAIN |
-| Ek minute, sochne do | ASK_AGAIN |
+| CONTINUE | Recognized acknowledgement; preserve the existing response |
+| STOP_AND_CORRECT | A correction or interruption needs processing |
+| ASK_AGAIN | The response is unclear and needs clarification |
 
-Ambiguous expressions are handled carefully so that a word such as "nahi" does not automatically trigger a correction in every context.
+The classifier uses Hindi/Hinglish normalization, phrase matching and contextual rules.
 
-### 7.6 Why a Rule-Based Approach?
+It is integrated into the backend correction workflow.
 
-A rule-based approach was selected because:
+**Current scope:** The classifier is implemented and tested, but continuous automatic interruption detection and real-time audio ducking are not implemented.
 
-- The conversational categories are clearly defined.
-- Common Hindi and Hinglish expressions can be handled using phrase matching.
-- The logic is interpretable and easy to debug.
-- A representative labelled audio dataset is not yet available for training a reliable ML classifier.
-
-The current implementation is a rule-based classifier, not a trained machine-learning model.
-
-### Important Implementation Limitation
-
-The classifier is implemented and tested independently, and its classification logic is integrated into the backend's turn-handling flow.
-
-However, continuous automatic interruption detection during assistant playback and real-time audio ducking are not implemented.
-
-The current correction experience uses a separate user-triggered correction microphone.
-
----
-
-## 8. API Endpoints
-
-The FastAPI backend exposes the following main endpoints:
+## 6. API Endpoints
 
 | Endpoint | Method | Purpose |
 |---|---|---|
-| `/health` | GET | Application health check |
-| `/api/order` | POST | Process an order transcript |
-| `/api/voice-order` | POST | Process a recorded voice order |
-| `/api/transcribe` | POST | Transcribe correction audio |
-| `/api/order/correct` | POST | Apply a correction to an existing order |
+| `/health` | GET | Health check |
+| `/api/order` | POST | Process a text transcript into an order |
+| `/api/voice-order` | POST | Process microphone audio as a voice order |
+| `/api/transcribe` | POST | Transcribe audio without creating a new order |
+| `/api/order/correct` | POST | Apply a contextual order correction |
 
-These endpoints separate voice transcription, order processing and contextual correction into distinct backend operations.
+Interactive API documentation is available at `/docs`.
 
----
+## 7. Evaluation Summary
 
-## 9. Testing and Evaluation
+### Order parsing
 
-Testing is an important part of the project because natural-language ordering and conversational turn-taking can fail in different ways.
+- 40 synthetic test cases.
+- 40 passed.
+- 100% pass rate on the prepared dataset.
 
-### 9.1 Order Parser Evaluation
+### Turn-taking
 
-The order parser was tested using 40 synthetic grocery-order examples.
+- 90/90 synthetic development examples passed.
+- Initial independent holdout baseline: 66.67%.
+- Final regression set: 30/30 after rule improvements.
+- 32 automated tests passed.
 
-| Metric | Result |
-|---|---:|
-| Total cases | 40 |
-| Passed | 40 |
-| Failed | 0 |
-| Pass rate | 100% |
+The final regression set reuses examples that informed debugging and must not be described as independent test performance.
 
-The dataset covers different ordering patterns, quantities, units, repeated products, corrections and clarification scenarios.
+### Speech recognition
 
-This result applies only to the prepared synthetic dataset.
+- Five-sample initial evaluation: 5/5 successful.
+- Five-sample WER: 11.32%.
+- Separate 30-speaker evaluation: 6/30 successful.
+- Six-sample silence-padding experiment: 2/6 successful.
 
-### 9.2 Turn-Taking Development Evaluation
+See `results.md` for detailed metrics and limitations.
 
-The expanded development dataset contains 90 synthetic conversational examples.
-
-| Category | Passed | Total |
-|---|---:|---:|
-| Backchannels | 30 | 30 |
-| Corrections | 30 | 30 |
-| Ambiguous speech | 30 | 30 |
-| **Total** | **90** | **90** |
-
-The classifier achieved 100% on this development dataset.
-
-### 9.3 Additional Independent Evaluation
-
-An additional 30-case dataset was evaluated.
-
-The initial result was 63.33%. After examining the failed examples and improving the rules, the post-fix re-evaluation reached 30/30.
-
-This was a re-evaluation of the same dataset after rule refinement, not an untouched independent benchmark.
-
-### 9.4 Automated Testing
-
-The latest recorded automated test result is:
-
-```text
-38 passed
-```
-
-The test suite covers transcript normalization, feature extraction and turn-taking classification.
-
-### 9.5 Evaluation Limitations
-
-- Most evaluation examples are synthetic text transcripts.
-- Synthetic text results do not establish real-world audio accuracy.
-- The latest post-fix 30-case result was obtained after examining that dataset's failures.
-- Real-audio turn-taking accuracy has not yet been measured.
-- More testing is required across speakers, accents and background-noise conditions.
-
----
-
-## 10. Repository Structure
-
-The project repository is organized into the following major modules:
+## 8. Repository Structure
 
 ```text
 dukaan-saathi/
-|
-|-- server/
-|   |-- main.py
-|   |-- order_parser.py
-|   |-- ...
-|
-|-- turntaking/
-|   |-- features.py
-|   |-- rules.py
-|   |-- classifier.py
-|   |-- test_normalization.py
-|
-|-- eval/
-|   |-- test_orders.json
-|   |-- turn_test_cases.json
-|   |-- turn_test_cases_expanded.json
-|   |-- turn_test_cases_holdout.json
-|   |-- turn_test_cases_independent.json
-|   |-- run_eval.py
-|   |-- run_turn_eval.py
-|   |-- run_independent_eval.py
-|   |-- results/
-|
-|-- web/
-|   |-- index.html
-|   |-- ...
-|
-|-- docs/
-|   |-- project-explanation.md
-|   |-- design.md
-|   |-- results.md
-|   |-- api-notes.md
-|
-|-- requirements.txt
-|-- .env
+├── server/
+│   ├── main.py
+│   ├── order_parser.py
+│   └── ...
+├── turntaking/
+│   ├── classifier.py
+│   ├── features.py
+│   ├── rules.py
+│   └── test_normalization.py
+├── eval/
+│   ├── test_orders.json
+│   ├── run_eval.py
+│   ├── run_turn_eval.py
+│   ├── run_holdout_turn_eval.py
+│   └── results/
+├── web/
+│   └── index.html
+├── docs/
+│   ├── project-explanation.md
+│   ├── design.md
+│   └── results.md
+├── requirements.txt
+├── README.md
+└── .gitignore
 ```
 
-The `.env` file contains local API credentials and must never be committed to GitHub.
+## 9. Running the Application
 
----
+Install dependencies:
 
-## 11. Deployment
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-The application is deployed using Render.
+Create a local `.env` file with the required API credentials:
 
-**Live application:**
+```env
+GNANI_API_KEY=your_gnani_api_key
+GROQ_API_KEY=your_groq_api_key
+```
 
-https://dukaan-saathi-q6lu.onrender.com
+Start the FastAPI server:
 
-**API documentation:**
+```bash
+uvicorn server.main:app --reload
+```
 
-https://dukaan-saathi-q6lu.onrender.com/docs
+Open:
 
-**GitHub repository:**
+```text
+http://127.0.0.1:8000
+```
 
-https://github.com/mantashaamin/dukaan-saathi
+Never commit `.env` or private API credentials.
 
-The deployed application provides access to the voice-ordering and correction workflow.
+## 10. Current Limitations
 
-The Render free instance may sleep when inactive, so the first request after inactivity can take longer while the service starts.
+- Prisma transcription performance varies significantly across short recordings and speakers.
+- The initial holdout turn-taking evaluation exposed generalization gaps.
+- The final regression result does not establish independent real-world accuracy.
+- Continuous automatic interruption detection is not implemented.
+- Real-time audio ducking is not implemented.
+- More diverse real-world audio evaluation is needed.
 
----
+## 11. Conclusion
 
-## 12. Current Limitations
+Dukaan Saathi demonstrates how speech technology, LLM-based extraction and structured validation can work together to simplify grocery ordering in Hindi and Hinglish.
 
-1. Real-time streaming speech recognition through Prisma WebSocket has not been successfully integrated.
-2. The current voice workflow uses recorded audio submitted to the backend rather than a continuous streaming connection.
-3. The turn-taking classifier is rule-based and does not use a trained ML model.
-4. Continuous automatic interruption detection is not implemented.
-5. Real-time audio ducking is not implemented.
-6. Evaluation is primarily based on synthetic text examples.
-7. More testing is required with real conversational recordings, background noise and regional speech variations.
-8. IndicVoices has been selected for exploration, but real-audio evaluation has not yet been completed.
+The project combines a working voice-order workflow, contextual corrections, generated spoken confirmations and a rule-based turn-taking component.
 
-These limitations are documented to distinguish working features from proposed improvements.
-
----
-
-## 13. Future Development Priorities
-
-1. Evaluate speech recognition using real Hindi and Hinglish audio recordings.
-2. Explore the Hindi subset of the AI4Bharat IndicVoices dataset.
-3. Measure transcription quality across different speakers and speaking styles.
-4. Create a carefully labelled real-audio turn-taking evaluation set.
-5. Improve contextual handling of acknowledgements, corrections and ambiguous responses.
-6. Investigate continuous speech activity detection.
-7. Explore automatic audio ducking and real-time interruption handling.
-8. Expand grocery vocabulary, product aliases and regional expressions.
-9. Improve evaluation coverage using unseen examples.
-
----
-
-## 14. Conclusion
-
-Dukaan Saathi demonstrates how speech recognition, large language models, structured data validation and speech synthesis can work together to simplify grocery ordering for local Indian kirana stores.
-
-The project goes beyond basic voice-to-text conversion by supporting structured order extraction, contextual corrections and a dedicated conversational turn-taking engine.
-
-The integration of Gnani Prisma and Timbre provides the speech capabilities, while the LLM-based parser and Pydantic validation handle order understanding and structured data.
-
-The turn-taking engine addresses an important conversational challenge: distinguishing when a customer is simply acknowledging the assistant and when they actually want to change the order.
-
-The next major step is to strengthen evaluation using real Hindi and Hinglish audio recordings and improve the reliability of conversational interaction.
-
-**Dukaan Saathi aims to make everyday grocery ordering more natural, accessible and reliable through voice-based AI.**
-
----
-
-## 15. Interview Explanation
-
-### Short Introduction
-
-"Dukaan Saathi is an AI-powered voice assistant for Indian kirana stores. It allows shopkeepers to place grocery orders naturally in Hindi and Hinglish. We use Gnani Prisma for speech recognition, an LLM for extracting structured order information, Pydantic for validation and Gnani Timbre for spoken confirmations."
-
-### Technical Explanation
-
-"The interesting part of my project is not just speech recognition. I also implemented contextual order corrections and a rule-based turn-taking engine. It distinguishes between acknowledgements like 'haan haan', corrections like 'ruko, namak nahi' and ambiguous responses that require clarification. I evaluated the order parser on 40 synthetic cases and developed the turn-taking logic using separate synthetic datasets. I am now working towards evaluating it with real Hindi speech recordings."
-
----
-
-**Project Name:** Dukaan Saathi
-
-**Challenge:** Great Indian AI Internship Challenge by Gnani AI
-
-**Developer:** Mantasha Parween
-
-**GitHub:** https://github.com/mantashaamin/dukaan-saathi
-
-**Live Demo:** https://dukaan-saathi-q6lu.onrender.com
+It also documents the limitations identified during testing, providing a clear foundation for future improvements.
