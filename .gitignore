@@ -37,3 +37,26 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+
+# Virtual environments and secrets
+.venv/
+venv/
+.env
+.env.*
+
+# Python generated files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Raw evaluation datasets and audio
+data/
+*.flac
+*.wav
+*.m4a
+
+# Experimental backups
+backups/
+
+# Local development files
+.DS_Store
